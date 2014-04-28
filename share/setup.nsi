@@ -5,7 +5,7 @@ SetCompressor /SOLID lzma
 
 # General Symbol Definitions
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 0.8.6.4
+!define VERSION 0.8.7.1
 !define COMPANY "Vertcoin project"
 !define URL http://www.vertcoin.org/
 
@@ -45,14 +45,14 @@ Var StartMenuGroup
 !insertmacro MUI_LANGUAGE English
 
 # Installer attributes
-OutFile vertcoin-0.8.6.3-win32-setup.exe
+OutFile vertcoin-${VERSION}-win32-setup.exe
 InstallDir $PROGRAMFILES\Vertcoin
 CRCCheck on
 XPStyle on
 BrandingText " "
 ShowInstDetails show
-VIProductVersion 0.8.6.4
-VIAddVersionKey ProductName Vertcoin
+VIProductVersion ${VERSION}
+VIAddVersionKey ProductName Litecoin
 VIAddVersionKey ProductVersion "${VERSION}"
 VIAddVersionKey CompanyName "${COMPANY}"
 VIAddVersionKey CompanyWebsite "${URL}"

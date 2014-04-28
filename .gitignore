@@ -34,4 +34,4 @@ Info
 Vertcoin-Qt.xcodeproj
 Vertcoin-Qt.dmg
 
-!src/leveldb-*/Makefile
+!src/leveldb*/Makefile
