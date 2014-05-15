@@ -79,6 +79,31 @@ Optional:
 	sudo apt-get install libminiupnpc-dev (see USE_UPNP compile flag)
 
 
+Dependency Build Instructions: FreeBSD 8.x/9.x
+----------------------------------------------
+Build and install dependencies manually via ports:
+
+	cd /usr/ports/net/miniupnpc && make install clean
+	cd /usr/ports/devel/gmake && make install clean
+	cd /usr/ports/databases/db48 && make install clean
+	cd /usr/ports/devel/boost-libs && make install clean
+
+Or using portmaster:
+
+	portmaster -d net/miniupnpc devel/gmake databases/db48 devel/boost-libs
+
+
+Enable miniupnpc system startup by modifying /etc/rc.conf and adding the following:
+
+	miniupnpc_enable="YES"
+
+
+To compile Vertcoin with GNU make:
+
+	cd src/
+	gmake -f makefile.fbsd
+
+
 Notes
 -----
 The release is built with GCC and then "strip bitcoind" to strip the debug
