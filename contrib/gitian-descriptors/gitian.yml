@@ -17,8 +17,8 @@ remotes:
 - "url": "https://github.com/vertcoin/vertcoin.git"
   "dir": "vertcoin"
 files:
-- "vertcoin-deps-linux32-gitian-r1.zip"
-- "vertcoin-deps-linux64-gitian-r1.zip"
+- "vertcoin-deps-linux32-gitian-r2.zip"
+- "vertcoin-deps-linux64-gitian-r2.zip"
 - "boost-linux32-1.55.0-gitian-r1.zip"
 - "boost-linux64-1.55.0-gitian-r1.zip"
 script: |

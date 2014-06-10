@@ -18,7 +18,7 @@ remotes:
 files:
 - "qt-win32-4.8.5-gitian-r5.zip"
 - "boost-win32-1.55.0-gitian-r6.zip"
-- "vertcoin-deps-win32-gitian-r2.zip"
+- "vertcoin-deps-win32-gitian-r3.zip"
 script: |
   #
   STAGING=$HOME/staging
