@@ -27,7 +27,7 @@ script: |
   #
   mkdir -p $INSTDIR
   cd $INSTDIR
-  unzip ../build/vertcoin-deps-linux${GBUILD_BITS}-gitian-r1.zip
+  unzip ../build/vertcoin-deps-linux${GBUILD_BITS}-gitian-r2.zip
   unzip ../build/boost-linux${GBUILD_BITS}-1.55.0-gitian-r1.zip
   cd ..
   #
