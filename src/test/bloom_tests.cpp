@@ -66,10 +66,10 @@ BOOST_AUTO_TEST_CASE(bloom_create_insert_serialize_with_tweak)
 
     BOOST_CHECK_EQUAL_COLLECTIONS(stream.begin(), stream.end(), expected.begin(), expected.end());
 }
-
+#include <iomanip>
 BOOST_AUTO_TEST_CASE(bloom_create_insert_key)
 {
-    string strSecret = string("6v7hgtX6r7frdh7XDRJ3L4JRLMAn9chCgNgSccwqWdp69XfPdX6");
+    string strSecret = string("7hd8aZQPdCiE2rAP1jnTQS8pGfZjTdepoRiRphjUH55TrSAURvs");
     CBitcoinSecret vchSecret;
     BOOST_CHECK(vchSecret.SetString(strSecret));
 
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(bloom_create_insert_key)
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
     filter.Serialize(stream, SER_NETWORK, PROTOCOL_VERSION);
 
-    vector<unsigned char> vch = ParseHex("0322ed23080000000000000001");
+    vector<unsigned char> vch = ParseHex("03814f4f080000000000000001");
     vector<char> expected(vch.size());
 
     for (unsigned int i = 0; i < vch.size(); i++)

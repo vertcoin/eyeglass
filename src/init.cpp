@@ -269,7 +269,7 @@ int main(int argc, char* argv[])
     bool fRet = false;
 
     // Connect bitcoind signal handlers
-    noui_connect();
+    //noui_connect();
 
     fRet = AppInit(argc, argv);
 
