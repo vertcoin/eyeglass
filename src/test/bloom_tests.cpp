@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(bloom_create_insert_serialize_with_tweak)
 
     BOOST_CHECK_EQUAL_COLLECTIONS(stream.begin(), stream.end(), expected.begin(), expected.end());
 }
-#include <iomanip>
+
 BOOST_AUTO_TEST_CASE(bloom_create_insert_key)
 {
     string strSecret = string("7hd8aZQPdCiE2rAP1jnTQS8pGfZjTdepoRiRphjUH55TrSAURvs");
