@@ -38,7 +38,7 @@ AddressBookPage::AddressBookPage(Mode mode, Tabs tab, QWidget *parent) :
     ui->verifyMessage->setIcon(QIcon());
     ui->signMessage->setIcon(QIcon());
     ui->exportButton->setIcon(QIcon());
-    ui->importSXButton->setIcon(QIcon());
+    ui->importStealthAddress->setIcon(QIcon());
 #endif
 
 #ifndef USE_QRCODE
