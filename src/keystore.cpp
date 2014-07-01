@@ -26,6 +26,8 @@ bool CBasicKeyStore::AddKeyPubKey(const CKey& key, const CPubKey &pubkey)
     return true;
 }
 
+CBasicKeyStore::CBasicKeyStore() : mapKeys(), mapScripts() {}
+
 bool CBasicKeyStore::AddCScript(const CScript& redeemScript)
 {
     LOCK(cs_KeyStore);

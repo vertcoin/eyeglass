@@ -95,25 +95,8 @@ public:
     MasterKeyMap mapMasterKeys;
     unsigned int nMasterKeyMaxID;
 
-    CWallet()
-    {
-        nWalletVersion = FEATURE_BASE;
-        nWalletMaxVersion = FEATURE_BASE;
-        fFileBacked = false;
-        nMasterKeyMaxID = 0;
-        pwalletdbEncryption = NULL;
-        nOrderPosNext = 0;
-    }
-    CWallet(std::string strWalletFileIn)
-    {
-        nWalletVersion = FEATURE_BASE;
-        nWalletMaxVersion = FEATURE_BASE;
-        strWalletFile = strWalletFileIn;
-        fFileBacked = true;
-        nMasterKeyMaxID = 0;
-        pwalletdbEncryption = NULL;
-        nOrderPosNext = 0;
-    }
+    CWallet();
+    CWallet(std::string strWalletFileIn);
 
     std::map<uint256, CWalletTx> mapWallet;
     int64 nOrderPosNext;
@@ -920,7 +903,6 @@ public:
 
     IMPLEMENT_SERIALIZE
     (
-        CStealthAddressEntry& me = *const_cast<CStealthAddressEntry*>(this);
         if (!(nType & SER_GETHASH))
             READWRITE(nVersion);
         // Note: strAccount is serialized as part of the key, not here.
@@ -953,7 +935,6 @@ public:
 
     IMPLEMENT_SERIALIZE
     (
-        CStealthAddressWifEntry& me = *const_cast<CStealthAddressWifEntry*>(this);
         if (!(nType & SER_GETHASH))
             READWRITE(nVersion);
         READWRITE(wif);
