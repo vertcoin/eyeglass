@@ -406,7 +406,7 @@ bool CTransaction::IsStandard(string& strReason) const
     unsigned int nDataOut = 0;
     txnouttype whichType;
     BOOST_FOREACH(const CTxOut& txout, vout) {
-        if (!::IsStandard(txout.scriptPubKey)) {
+        if (!::IsStandard(txout.scriptPubKey, whichType)) {
             strReason = "scriptpubkey";
             return false;
         }
