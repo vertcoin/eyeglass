@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>760</width>
+    <width>1754</width>
     <height>380</height>
    </rect>
   </property>
@@ -96,7 +96,7 @@
      <item>
       <widget class="QPushButton" name="signMessage">
        <property name="toolTip">
-        <string>Sign a message to prove you own a Vertcoin address</string>
+        <string>Sign a message to prove you own a Monocle address</string>
        </property>
        <property name="text">
         <string>Sign &amp;Message</string>
@@ -110,7 +110,7 @@
      <item>
       <widget class="QPushButton" name="verifyMessage">
        <property name="toolTip">
-        <string>Verify a message to ensure it was signed with a specified Vertcoin address</string>
+        <string>Verify a message to ensure it was signed with a specified Monocle address</string>
        </property>
        <property name="text">
         <string>&amp;Verify Message</string>
@@ -132,6 +132,39 @@
        <property name="icon">
         <iconset resource="../bitcoin.qrc">
          <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="newStealthAddress">
+       <property name="text">
+        <string>New Stealth Address</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../bitcoin.qrc">
+         <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="importStealthAddress">
+       <property name="text">
+        <string>Import Stealth Address Transactions</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../bitcoin.qrc">
+         <normaloff>:/icons/edit</normaloff>:/icons/edit</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="resetPrivateKeysButton">
+       <property name="text">
+        <string>Reset Private Keys Status</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../bitcoin.qrc">
+         <normaloff>:/icons/key</normaloff>:/icons/key</iconset>
        </property>
       </widget>
      </item>
@@ -184,3 +217,4 @@
  </resources>
  <connections/>
 </ui>
+

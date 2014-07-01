@@ -28,6 +28,10 @@ EditAddressDialog::EditAddressDialog(Mode mode, QWidget *parent) :
     case NewSendingAddress:
         setWindowTitle(tr("New sending address"));
         break;
+    case NewStealthAddress:
+        setWindowTitle(tr("New stealth address"));
+        ui->addressEdit->setEnabled(false);
+        break;
     case EditReceivingAddress:
         setWindowTitle(tr("Edit receiving address"));
         ui->addressEdit->setEnabled(false);
@@ -76,6 +80,11 @@ bool EditAddressDialog::saveCurrentRow()
                 ui->labelEdit->text(),
                 ui->addressEdit->text());
         break;
+    case NewStealthAddress:
+        address = model->addRow(AddressTableModel::Stealth,
+                                ui->labelEdit->text(),
+                                ui->addressEdit->text());
+        break;
     case EditReceivingAddress:
     case EditSendingAddress:
         if(mapper->submit())
@@ -115,6 +124,11 @@ void EditAddressDialog::accept()
         case AddressTableModel::WALLET_UNLOCK_FAILURE:
             QMessageBox::critical(this, windowTitle(),
                 tr("Could not unlock wallet."),
+                QMessageBox::Ok, QMessageBox::Ok);
+            break;
+        case AddressTableModel::INVALID_ACCOUNT_NAME:
+            QMessageBox::critical(this, windowTitle(),
+                tr("Invalid account name."),
                 QMessageBox::Ok, QMessageBox::Ok);
             break;
         case AddressTableModel::KEY_GENERATION_FAILURE:

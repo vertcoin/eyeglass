@@ -98,6 +98,11 @@ void WalletFrame::gotoReceiveCoinsPage()
     walletStack->gotoReceiveCoinsPage();
 }
 
+void WalletFrame::gotoStealthAddressPage()
+{
+    walletStack->gotoStealthAddressPage();
+}
+
 void WalletFrame::gotoSendCoinsPage(QString addr)
 {
     walletStack->gotoSendCoinsPage(addr);

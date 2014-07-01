@@ -70,6 +70,7 @@ public:
     QAction * getHistoryAction() { return historyAction; }
     QAction * getAddressBookAction() { return addressBookAction; }
     QAction * getReceiveCoinsAction() { return receiveCoinsAction; }
+    QAction * getStealthAddressAction() { return stealthAddressAction; }
     QAction * getSendCoinsAction() { return sendCoinsAction; }
 
 protected:
@@ -99,6 +100,7 @@ private:
     QAction *verifyMessageAction;
     QAction *aboutAction;
     QAction *receiveCoinsAction;
+    QAction *stealthAddressAction;
     QAction *optionsAction;
     QAction *toggleHideAction;
     QAction *encryptWalletAction;
@@ -175,6 +177,8 @@ private slots:
     void gotoAddressBookPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
+    /** Switch to stealth address page */
+    void gotoStealthAddressPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
 

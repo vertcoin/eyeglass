@@ -4,12 +4,22 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <boost/assign/list_of.hpp>
+#include <openssl/ecdsa.h>
+#include <openssl/rand.h>
+#include <openssl/obj_mac.h>
+#include <openssl/sha.h>
+#include <array>
+#include <utility>
+#include <secp256k1.h>
+#include <random>
 
 #include "wallet.h"
 #include "walletdb.h"
 #include "bitcoinrpc.h"
 #include "init.h"
 #include "base58.h"
+
+
 
 using namespace std;
 using namespace boost;
@@ -60,6 +70,7 @@ string AccountFromValue(const Value& value)
     return strAccount;
 }
 
+
 Value getinfo(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)
@@ -92,10 +103,11 @@ Value getinfo(const Array& params, bool fHelp)
     if (pwalletMain && pwalletMain->IsCrypted())
         obj.push_back(Pair("unlocked_until", (boost::int64_t)nWalletUnlockTime));
     obj.push_back(Pair("errors",        GetWarnings("statusbar")));
+
     return obj;
+
+
 }
-
-
 
 Value getnewaddress(const Array& params, bool fHelp)
 {
@@ -302,6 +314,7 @@ Value sendtoaddress(const Array& params, bool fHelp)
 
     return wtx.GetHash().GetHex();
 }
+
 
 Value listaddressgroupings(const Array& params, bool fHelp)
 {
@@ -687,7 +700,7 @@ Value sendmany(const Array& params, bool fHelp)
         wtx.mapValue["comment"] = params[3].get_str();
 
     set<CBitcoinAddress> setAddress;
-    vector<pair<CScript, int64> > vecSend;
+    vector<pair<pair<pair<CScript, int64>, ec_secret>, bool>> vecSend;
 
     int64 totalAmount = 0;
     BOOST_FOREACH(const Pair& s, sendTo)
@@ -705,7 +718,8 @@ Value sendmany(const Array& params, bool fHelp)
         int64 nAmount = AmountFromValue(s.value_);
         totalAmount += nAmount;
 
-        vecSend.push_back(make_pair(scriptPubKey, nAmount));
+        ec_secret ecSecret;
+        vecSend.push_back(make_pair(make_pair(make_pair(scriptPubKey, nAmount), ecSecret), false));
     }
 
     EnsureWalletIsUnlocked();
@@ -719,6 +733,7 @@ Value sendmany(const Array& params, bool fHelp)
     CReserveKey keyChange(pwalletMain);
     int64 nFeeRequired = 0;
     string strFailReason;
+
     bool fCreated = pwalletMain->CreateTransaction(vecSend, wtx, keyChange, nFeeRequired, strFailReason);
     if (!fCreated)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, strFailReason);
@@ -1617,3 +1632,318 @@ Value listlockunspent(const Array& params, bool fHelp)
     return ret;
 }
 
+
+//
+// stealth section
+//
+
+Value getnewstealthaddress(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() > 1)
+        throw runtime_error(
+                "getnewstealthaddress [account]\n"
+                "Returns a new Vertcoin Stealth address for receiving payments.  "
+                "If [account] is specified (recommended), it is added to the address book "
+                "so payments received with the address will be credited to [account].");
+
+    // Parse the account first so we don't generate a key if there's an error
+    string strAccount;
+    if (params.size() > 0)
+        strAccount = AccountFromValue(params[0]);
+
+    ec_secret scan_secret = generate_random_secret();
+    ec_secret spend_secret = generate_random_secret();
+
+    std::vector<unsigned char> scanSecret;
+    std::vector<unsigned char> spendSecret;
+
+    for(unsigned int i=0; i<32; i++)
+    {
+        scanSecret.push_back(scan_secret[i]);
+        spendSecret.push_back(spend_secret[i]);
+    }
+
+    ec_point spend_pubkey = secret_to_public_key(spend_secret, true);
+
+    stealth_address addr;
+    addr.options = 0;
+    addr.scan_pubkey = secret_to_public_key(scan_secret, true);
+    addr.spend_pubkeys.push_back(spend_pubkey);
+    addr.number_signatures = 1;
+
+    CStealthAddressEntry stealthAddressEntry;
+    stealthAddressEntry.strAccount = strAccount;
+    stealthAddressEntry.scanSecret = scanSecret;
+    stealthAddressEntry.spendSecret = spendSecret;
+    stealthAddressEntry.stealthAddress = addr.encoded();
+
+    // write to database
+    CWalletDB walletdb(pwalletMain->strWalletFile);
+    walletdb.WriteStealthAddressEntry(stealthAddressEntry);
+
+    return addr.encoded();
+
+}
+
+
+Value liststealthaddress(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() > 1)
+        throw runtime_error(
+              "liststealthaddress [account]\n"
+              "Returns a list of Vertcoin Stealth address"
+              "If [account] is specified (recommended), it will return only for that account"
+              "NOTE: This account doesn't relate to Vertcoin address accounts");
+
+
+    string strAccount;
+    if (params.size() > 0){
+        strAccount = params[0].get_str();
+    }else{
+        strAccount = "*";
+    }
+    Array ret;
+
+
+    list<CStealthAddressEntry> listStealthAddress;
+    CWalletDB(pwalletMain->strWalletFile).ListStealthAddress(strAccount, listStealthAddress);
+
+
+    BOOST_FOREACH(const CStealthAddressEntry& stealthAddress, listStealthAddress)
+    {
+        Object obj;
+        obj.push_back(Pair("account", stealthAddress.strAccount));
+        obj.push_back(Pair("stealthaddress", stealthAddress.stealthAddress));
+        obj.push_back(Pair("spendsecret", HexStr(stealthAddress.spendSecret)));
+        obj.push_back(Pair("scansecret", HexStr(stealthAddress.scanSecret)));
+        ret.push_back(obj);
+    }
+
+    return ret;
+
+}
+
+Value resetprikeystatus(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0)
+        throw runtime_error(
+              "resetprikeystatus\n"
+              "Resets all private keys which belong to Vertcoin Stealth address");
+
+    list<CStealthAddressWifEntry> listImportSxWif;
+    CWalletDB(pwalletMain->strWalletFile).ListImportedSxWif(listImportSxWif, true);
+
+    printf("\n size of listImportSxWif = %d \n", listImportSxWif.size());
+
+    BOOST_FOREACH(const CStealthAddressWifEntry& item, listImportSxWif)
+    {
+        // mark as unimported
+        CWalletDB(pwalletMain->strWalletFile).WriteImportedSxWifEntry(item, false);
+        printf("\n reseting private key for importing sx \n");
+    }
+
+    return Value::null;
+
+}
+
+Value importstealthaddress(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+              "importstealthaddress [rescan=true]\n"
+              "Adds a private key from stealth address transactions to your wallet.");
+
+
+    EnsureWalletIsUnlocked();
+
+    list<CStealthAddressWifEntry> listImportSxWif;
+    CWalletDB(pwalletMain->strWalletFile).ListImportedSxWif(listImportSxWif, false);
+
+    // Whether to perform rescan after import
+    bool fRescan = true;
+    if (params.size() > 1)
+        fRescan = params[1].get_bool();
+
+    BOOST_FOREACH(const CStealthAddressWifEntry& item, listImportSxWif)
+    {
+        string strLabel = item.stealthAddress;
+
+        CBitcoinSecret vchSecret;
+        bool fGood = vchSecret.SetString(item.wif);
+
+        if (!fGood) throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid stealth address private key encoding");
+
+        CKey key = vchSecret.GetKey();
+        CPubKey pubkey = key.GetPubKey();
+        CKeyID vchAddress = pubkey.GetID();
+        if (!key.IsValid()) throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Private key outside allowed range");
+
+        {
+            LOCK2(cs_main, pwalletMain->cs_wallet);
+
+            pwalletMain->MarkDirty();
+            pwalletMain->SetAddressBookName(vchAddress, strLabel);
+
+            if (!pwalletMain->AddKeyPubKey(key, pubkey))
+                throw JSONRPCError(RPC_WALLET_ERROR, "Error adding stealth address key to wallet");
+
+            // mark as imported
+           CWalletDB(pwalletMain->strWalletFile).WriteImportedSxWifEntry(item, true);
+        }
+    }
+
+    if(listImportSxWif.size() != 0){
+        if (fRescan) {
+            pwalletMain->ScanForWalletTransactions(pindexGenesisBlock, true);
+            pwalletMain->ReacceptWalletTransactions();
+        }
+    }
+
+    return Value::null;
+
+}
+
+
+Value sendtostealthaddress(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() < 2 || params.size() > 4)
+        throw runtime_error(
+            "sendtostealthaddress <vertcoinstealthaddress> <amount> [comment] [comment-to]\n"
+            "<amount> is a real and is rounded to the nearest 0.00000001"
+            + HelpRequiringPassphrase());
+
+    stealth_address recv;
+    if (!recv.set_encoded(params[0].get_str()))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin stealth address");
+
+    // Amount
+    int64 nAmount = AmountFromValue(params[1]);
+
+    // Wallet comments
+    CWalletTx wtx;
+    if (params.size() > 2 && params[2].type() != null_type && !params[2].get_str().empty())
+        wtx.mapValue["comment"] = params[2].get_str();
+    if (params.size() > 3 && params[3].type() != null_type && !params[3].get_str().empty())
+        wtx.mapValue["to"]      = params[3].get_str();
+
+    wtx.mapValue["stealthaddress"]  = params[0].get_str();
+
+    if (pwalletMain->IsLocked())
+        throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please enter the wallet passphrase with walletpassphrase first.");
+
+    bool reuse_key = recv.options & stealth_address::reuse_key_option;
+    // Get our scan and spend pubkeys.
+    const ec_point& recv_scan_pubkey = recv.scan_pubkey;
+    //spend_pubkey = scan_pubkey;
+    ec_point recv_spend_pubkey;
+    if (!reuse_key)
+        recv_spend_pubkey = recv.spend_pubkeys.front();
+    // Do stealth stuff.
+    ec_secret ephem_secret = generate_random_secret();
+
+    std::vector<unsigned char> ephemSecret;
+    for(unsigned int i = 0; i < 32 ; i++)
+    {
+        ephemSecret.push_back(ephem_secret[i]);
+    }
+
+    wtx.mapValue["ephemsecret"] = HexStr(ephemSecret.begin(), ephemSecret.end());
+
+    ec_point addr_pubkey = initiate_stealth(
+        ephem_secret, recv_scan_pubkey, recv_spend_pubkey);
+    ec_point ephem_pubkey = secret_to_public_key(ephem_secret, true);
+
+    CPubKey ephemPubKey;
+    ephemPubKey.Set(ephem_pubkey.begin(),ephem_pubkey.end());
+    // Generate the address.
+    payment_address payaddr;
+    set_public_key(payaddr, addr_pubkey);
+    string strAddrTmp = payaddr.encoded();
+
+    CBitcoinAddress address(strAddrTmp);
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin address");
+
+    string strError = pwalletMain->SendMoneyToStealthDestination(address.Get(), nAmount, wtx, ephem_secret);
+    if (strError != "")
+        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+
+    return wtx.GetHash().GetHex();
+}
+
+
+Value sendstealthfrom(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() < 3 || params.size() > 6)
+        throw runtime_error(
+            "sendstealthfrom <fromaccount> <tovertcoinstealthaddress> <amount> [minconf=1] [comment] [comment-to]\n"
+            "<amount> is a real and is rounded to the nearest 0.00000001"
+            + HelpRequiringPassphrase());
+
+    string strAccount = AccountFromValue(params[0]);
+
+    stealth_address recv;
+    if (!recv.set_encoded(params[1].get_str()))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin stealth address");
+
+    bool reuse_key = recv.options & stealth_address::reuse_key_option;
+    // Get our scan and spend pubkeys.
+    const ec_point& recv_scan_pubkey = recv.scan_pubkey;
+    //spend_pubkey = scan_pubkey;
+    ec_point recv_spend_pubkey;
+    if (!reuse_key)
+        recv_spend_pubkey = recv.spend_pubkeys.front();
+    // Do stealth stuff.
+    ec_secret ephem_secret = generate_random_secret();
+
+    std::vector<unsigned char> ephemSecret;
+    for(unsigned int i = 0; i < 32 ; i++)
+    {
+        ephemSecret.push_back(ephem_secret[i]);
+    }
+
+    ec_point addr_pubkey = initiate_stealth(
+        ephem_secret, recv_scan_pubkey, recv_spend_pubkey);
+    ec_point ephem_pubkey = secret_to_public_key(ephem_secret, true);
+
+    CPubKey ephemPubKey;
+    ephemPubKey.Set(ephem_pubkey.begin(),ephem_pubkey.end());
+    // Generate the address.
+    payment_address payaddr;
+    set_public_key(payaddr, addr_pubkey);
+
+    string addressTmp = payaddr.encoded();
+
+    CBitcoinAddress address(addressTmp);
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin address");
+
+
+    int64 nAmount = AmountFromValue(params[2]);
+    int nMinDepth = 1;
+    if (params.size() > 3)
+        nMinDepth = params[3].get_int();
+
+    CWalletTx wtx;
+    wtx.strFromAccount = strAccount;
+    if (params.size() > 4 && params[4].type() != null_type && !params[4].get_str().empty())
+        wtx.mapValue["comment"] = params[4].get_str();
+    if (params.size() > 5 && params[5].type() != null_type && !params[5].get_str().empty())
+        wtx.mapValue["to"]      = params[5].get_str();
+
+    wtx.mapValue["ephemsecret"] = HexStr(ephemSecret.begin(), ephemSecret.end());
+
+    EnsureWalletIsUnlocked();
+
+    // Check funds
+    int64 nBalance = GetAccountBalance(strAccount, nMinDepth);
+    if (nAmount > nBalance)
+        throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
+
+    // Send
+    string strError = pwalletMain->SendMoneyToStealthDestination(address.Get(), nAmount, wtx, ephem_secret);
+    if (strError != "")
+        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+
+    return wtx.GetHash().GetHex();
+}

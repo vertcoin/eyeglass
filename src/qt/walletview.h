@@ -60,6 +60,7 @@ private:
     QWidget *transactionsPage;
     AddressBookPage *addressBookPage;
     AddressBookPage *receiveCoinsPage;
+    AddressBookPage *stealthAddressPage;
     SendCoinsDialog *sendCoinsPage;
     SignVerifyMessageDialog *signVerifyMessageDialog;
 
@@ -74,6 +75,8 @@ public slots:
     void gotoAddressBookPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
+    /** Switch to stealth address page */
+    void gotoStealthAddressPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
 
