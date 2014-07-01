@@ -1,3 +1,7 @@
+0.8.7.2 changes
+=============
+- Added support for Stealth (SX) Addresses
+
 0.8.7.1 changes
 =============
 
