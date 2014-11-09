@@ -4,6 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
+#define BOOST_NO_SCOPED_ENUMS
 
 #include "walletdb.h"
 #include "wallet.h"

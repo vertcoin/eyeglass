@@ -41,7 +41,7 @@ LIBS= \
  -l boost_chrono$(BOOST_SUFFIX) \
  -l db_cxx \
  -l ssl \
- -l crypto
+ -l crypto 
 
 DEFS=-D_MT -DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB -DBOOST_SPIRIT_THREADSAFE
 DEBUGFLAGS=-g
@@ -100,7 +100,8 @@ OBJS= \
     obj/bloom.o \
     obj/noui.o \
     obj/leveldb.o \
-    obj/txdb.o
+    obj/txdb.o \
+	obj/stealth.o
 
 ifdef USE_SSE2
 DEFS += -DUSE_SSE2
@@ -118,6 +119,7 @@ test check: test_vertcoin.exe FORCE
 #
 DEFS += $(addprefix -I,$(CURDIR)/leveldb/include)
 DEFS += $(addprefix -I,$(CURDIR)/leveldb/helpers)
+LIBS += $(CURDIR)/leveldb/libleveldb.a $(CURDIR)/leveldb/libmemenv.a /usr/local/lib/libsecp256k1.a /usr/lib/libgmp.a
 
 leveldb/libleveldb.a:
 	cd leveldb && $(MAKE) CC=$(CC) CXX=$(CXX) OPT="$(CFLAGS)" TARGET_OS=NATIVE_WINDOWS libleveldb.a libmemenv.a && cd ..

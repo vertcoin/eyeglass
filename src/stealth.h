@@ -153,7 +153,7 @@ public:
     {
         if (init_done_)
             return;
-        secp256k1_start();
+        secp256k1_start(SECP256K1_START_SIGN | SECP256K1_START_VERIFY);
         init_done_ = true;
     }
 
