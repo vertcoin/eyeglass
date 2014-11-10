@@ -77,6 +77,7 @@ for other Ubuntu & Debian:
  (If using Boost 1.37, append -mt to the boost libraries in the makefile)
  
 libsecp256k1:
+
 	sudo apt-get install libgmp-dev
 	git clone https://github.com/bitcoin/secp256k1.git
 	cd secp256k1
