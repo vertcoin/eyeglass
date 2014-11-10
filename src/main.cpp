@@ -2355,8 +2355,8 @@ bool CBlock::AcceptBlock(CValidationState &state, CDiskBlockPos *dbp)
         LastHeight = pindexPrev->nHeight;
 
         // Check proof of work
-       /* if (nBits != GetNextWorkRequired(pindexPrev, this))
-            return state.DoS(100, error("AcceptBlock() : incorrect proof of work"));*/
+       if (nBits != GetNextWorkRequired(pindexPrev, this))
+            return state.DoS(100, error("AcceptBlock() : incorrect proof of work"));
 
         // Check timestamp against prev
         if (GetBlockTime() <= pindexPrev->GetMedianTimePast())
@@ -2398,7 +2398,7 @@ bool CBlock::AcceptBlock(CValidationState &state, CDiskBlockPos *dbp)
                     return state.DoS(100, error("AcceptBlock() : block height mismatch in coinbase"));
             }
         }
-                // Enforce block.nVersion=2 rule that the coinbase starts with serialized block height
+        // Enforce block.nVersion=3 rule that the PoW algorithm is Lyra2RE
         if (nVersion >= 3)
         {
             // if 750 of the last 1,000 blocks are version 2 or greater (51/100 if testnet):
