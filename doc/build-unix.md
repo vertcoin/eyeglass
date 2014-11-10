@@ -40,6 +40,7 @@ IPv6 support may be disabled by setting:
 	USE_IPV6=0    Disable IPv6 support
 
 Licenses of statically linked libraries:
+
  Berkeley DB   New BSD license with additional requirement that linked
                software must be free open source
  Boost         MIT-like license
