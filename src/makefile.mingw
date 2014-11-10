@@ -41,7 +41,7 @@ LIBS= \
  -l boost_chrono$(BOOST_SUFFIX) \
  -l db_cxx \
  -l ssl \
- -l crypto 
+ -l crypto
 
 DEFS=-D_MT -DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB -DBOOST_SPIRIT_THREADSAFE
 DEBUGFLAGS=-g
@@ -101,7 +101,14 @@ OBJS= \
     obj/noui.o \
     obj/leveldb.o \
     obj/txdb.o \
-	obj/stealth.o
+	obj/stealth.o \
+	Lyra2RE/Lyra2RE.o \
+	Lyra2RE/Lyra2.o \
+	Lyra2RE/Sponge.o \
+	Lyra2RE/blake.o \
+	Lyra2RE/groestl.o \
+	Lyra2RE/keccak.o \
+	Lyra2RE/skein.o
 
 ifdef USE_SSE2
 DEFS += -DUSE_SSE2
@@ -119,7 +126,6 @@ test check: test_vertcoin.exe FORCE
 #
 DEFS += $(addprefix -I,$(CURDIR)/leveldb/include)
 DEFS += $(addprefix -I,$(CURDIR)/leveldb/helpers)
-LIBS += $(CURDIR)/leveldb/libleveldb.a $(CURDIR)/leveldb/libmemenv.a /usr/local/lib/libsecp256k1.a /usr/lib/libgmp.a
 
 leveldb/libleveldb.a:
 	cd leveldb && $(MAKE) CC=$(CC) CXX=$(CXX) OPT="$(CFLAGS)" TARGET_OS=NATIVE_WINDOWS libleveldb.a libmemenv.a && cd ..
@@ -129,6 +135,9 @@ obj/%-sse2.o: %-sse2.cpp
 
 obj/%.o: %.cpp $(HEADERS)
 	$(CXX) -c $(CFLAGS) -o $@ $<
+	
+Lyra2RE/%.o: Lyra2RE%.c $(HEADERS)
+	$(CC) -c $(CFLAGS) -o $@ $<
 
 vertcoind.exe: $(OBJS:obj/%=obj/%)
 	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $(LIBPATHS) $^ $(LIBS)

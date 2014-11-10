@@ -10,6 +10,7 @@
 #include "init.h"
 #include "util.h"
 #include "ui_interface.h"
+#include "Lyra2RE/Lyra2RE.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -266,6 +267,25 @@ bool AppInit(int argc, char* argv[])
 extern void noui_connect();
 int main(int argc, char* argv[])
 {
+    /*unsigned char output[32];
+	lyra2re_hash("700000005d385ba114d079971b29a9418fd0549e7d68a95c7f168621a31420100050b070578586d149fd07b22f3a8a347c516de7052f034d2b76ff68e0d6ecff9b77a45489e3fd511732011df0731000", (char*)output);
+
+    char str[32];
+
+    unsigned char * pin = output;
+    const char * hex = "0123456789abcdef";
+    char * pout = str;
+    int i = 0;
+    for(; i < sizeof(output)-1; ++i){
+        *pout++ = hex[(*pin>>4)&0xF];
+        *pout++ = hex[(*pin++)&0xF];
+    }
+    *pout++ = hex[(*pin>>4)&0xF];
+    *pout++ = hex[(*pin)&0xF];
+    *pout = 0;
+
+    printf("%s\n", str);*/
+
     bool fRet = false;
 
     // Connect bitcoind signal handlers
@@ -513,7 +533,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     sa_hup.sa_flags = 0;
     sigaction(SIGHUP, &sa_hup, NULL);
 #endif
-    
+
 #if defined(USE_SSE2)
     unsigned int cpuid_edx=0;
 #if !defined(MAC_OSX) && (defined(_M_IX86) || defined(__i386__) || defined(__i386))
