@@ -11,8 +11,8 @@ UNIX BUILD NOTES
 To Build
 ---------------------
 
-	cd src/
-	make -f makefile.unix		# Headless vertcoin
+    cd src/
+    make -f makefile.unix		# Headless vertcoin
 
 See readme-qt.rst for instructions on building Vertcoin-Qt, the graphical user interface.
 
@@ -31,13 +31,13 @@ Dependencies
 http://miniupnp.tuxfamily.org/files/).  UPnP support is compiled in and
 turned off by default.  Set USE_UPNP to a different value to control this:
 
-	USE_UPNP=     No UPnP support miniupnp not required
-	USE_UPNP=0    (the default) UPnP support turned off by default at runtime
-	USE_UPNP=1    UPnP support turned on by default at runtime
+    USE_UPNP=     No UPnP support miniupnp not required
+    USE_UPNP=0    (the default) UPnP support turned off by default at runtime
+    USE_UPNP=1    UPnP support turned on by default at runtime
 
 IPv6 support may be disabled by setting:
 
-	USE_IPV6=0    Disable IPv6 support
+    USE_IPV6=0    Disable IPv6 support
 
 Licenses of statically linked libraries:
 
@@ -59,12 +59,12 @@ Dependency Build Instructions: Ubuntu & Debian
 ----------------------------------------------
 Build requirements:
 
-	sudo apt-get install build-essential git autoconf libtool
-	sudo apt-get install libssl-dev
+    sudo apt-get install build-essential git autoconf libtool
+    sudo apt-get install libssl-dev
 
 for Ubuntu 12.04:
 
-	sudo apt-get install libboost-all-dev
+    sudo apt-get install libboost-all-dev
 
  db4.8 packages are available [here](https://launchpad.net/~bitcoin/+archive/bitcoin).
 
@@ -73,49 +73,49 @@ for Ubuntu 12.04:
 
 for other Ubuntu & Debian:
 
-	sudo apt-get install libdb4.8-dev
-	sudo apt-get install libdb4.8++-dev
-	sudo apt-get install libboost1.37-dev
+    sudo apt-get install libdb4.8-dev
+    sudo apt-get install libdb4.8++-dev
+    sudo apt-get install libboost1.37-dev
  (If using Boost 1.37, append -mt to the boost libraries in the makefile)
- 
+
 libsecp256k1:
 
-	sudo apt-get install libgmp-dev
-	git clone https://github.com/bitcoin/secp256k1.git
-	cd secp256k1
-	./autogen.sh
-	./configure
-	make
-	make install
+    sudo apt-get install libgmp-dev
+    git clone https://github.com/bitcoin/secp256k1.git
+    cd secp256k1
+    ./autogen.sh
+    ./configure
+    make
+    make install
 
 Optional:
 
-	sudo apt-get install libminiupnpc-dev (see USE_UPNP compile flag)
+    sudo apt-get install libminiupnpc-dev (see USE_UPNP compile flag)
 
 
 Dependency Build Instructions: FreeBSD 8.x/9.x
 ----------------------------------------------
 Build and install dependencies manually via ports:
 
-	cd /usr/ports/net/miniupnpc && make install clean
-	cd /usr/ports/devel/gmake && make install clean
-	cd /usr/ports/databases/db48 && make install clean
-	cd /usr/ports/devel/boost-libs && make install clean
+    cd /usr/ports/net/miniupnpc && make install clean
+    cd /usr/ports/devel/gmake && make install clean
+    cd /usr/ports/databases/db48 && make install clean
+    cd /usr/ports/devel/boost-libs && make install clean
 
 Or using portmaster:
 
-	portmaster -d net/miniupnpc devel/gmake databases/db48 devel/boost-libs
+    portmaster -d net/miniupnpc devel/gmake databases/db48 devel/boost-libs
 
 
 Enable miniupnpc system startup by modifying /etc/rc.conf and adding the following:
 
-	miniupnpc_enable="YES"
+    miniupnpc_enable="YES"
 
 
 To compile Vertcoin with GNU make:
 
-	cd src/
-	gmake -f makefile.fbsd
+    cd src/
+    gmake -f makefile.fbsd
 
 
 Notes
@@ -126,28 +126,28 @@ symbols, which reduces the executable size by about 90%.
 
 miniupnpc
 ---------
-	tar -xzvf miniupnpc-1.6.tar.gz
-	cd miniupnpc-1.6
-	make
-	sudo su
-	make install
+    tar -xzvf miniupnpc-1.6.tar.gz
+    cd miniupnpc-1.6
+    make
+    sudo su
+    make install
 
 
 Berkeley DB
 -----------
 You need Berkeley DB 4.8.  If you have to build Berkeley DB yourself:
 
-	../dist/configure --enable-cxx
-	make
+    ../dist/configure --enable-cxx
+    make
 
 
 Boost
 -----
 If you need to build Boost yourself:
 
-	sudo su
-	./bootstrap.sh
-	./bjam install
+    sudo su
+    ./bootstrap.sh
+    ./bjam install
 
 
 Security
@@ -170,7 +170,7 @@ exploit even if a vulnerability is found, you can take the following measures:
 
     To test that you have built PIE executable, install scanelf, part of paxutils, and use:
 
-    	scanelf -e ./vertcoin
+        scanelf -e ./vertcoin
 
     The output should contain:
      TYPE
@@ -187,7 +187,7 @@ exploit even if a vulnerability is found, you can take the following measures:
     `scanelf -e ./vertcoin`
 
     the output should contain:
-	STK/REL/PTL
-	RW- R-- RW-
+    STK/REL/PTL
+    RW- R-- RW-
 
     The STK RW- means that the stack is readable and writeable but not executable.
