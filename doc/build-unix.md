@@ -19,12 +19,12 @@ See readme-qt.rst for instructions on building Vertcoin-Qt, the graphical user i
 Dependencies
 ---------------------
 
- |Library       |Purpose           |Description												 |
+ |Library       |Purpose           |Description										
  |--------------|------------------|---------------------------------------------------------|
- |libssl        |SSL Support       |Secure communications									 |
- |libdb4.8      |Berkeley DB       |Blockchain & wallet storage								 |
- |libboost      |Boost             |C++ Library												 |
- |miniupnpc     |UPnP Support      |Optional firewall-jumping support						 |
+ |libssl        |SSL Support       |Secure communications				     |
+ |libdb4.8      |Berkeley DB       |Blockchain & wallet storage				     |
+ |libboost      |Boost             |C++ Library						     |
+ |miniupnpc     |UPnP Support      |Optional firewall-jumping support			     |
  |libsecp256k1EC| Operations	   |Optimized C library for EC operations on curve secp256k1.|
 
 [miniupnpc](http://miniupnp.free.fr/) may be used for UPnP port mapping.  It can be downloaded from [here](
