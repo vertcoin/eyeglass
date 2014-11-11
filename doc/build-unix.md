@@ -19,13 +19,13 @@ See readme-qt.rst for instructions on building Vertcoin-Qt, the graphical user i
 Dependencies
 ---------------------
 
- Library     Purpose           Description
- -------     -------           -----------
- libssl      SSL Support       Secure communications
- libdb4.8    Berkeley DB       Blockchain & wallet storage
- libboost    Boost             C++ Library
- miniupnpc   UPnP Support      Optional firewall-jumping support
- libsecp256k1EC Operations	   Optimized C library for EC operations on curve secp256k1.
+ |Library       |Purpose           |Description												 |
+ |--------------|------------------|---------------------------------------------------------|
+ |libssl        |SSL Support       |Secure communications									 |
+ |libdb4.8      |Berkeley DB       |Blockchain & wallet storage								 |
+ |libboost      |Boost             |C++ Library												 |
+ |miniupnpc     |UPnP Support      |Optional firewall-jumping support						 |
+ |libsecp256k1EC| Operations	   |Optimized C library for EC operations on curve secp256k1.|
 
 [miniupnpc](http://miniupnp.free.fr/) may be used for UPnP port mapping.  It can be downloaded from [here](
 http://miniupnp.tuxfamily.org/files/).  UPnP support is compiled in and
@@ -41,11 +41,12 @@ IPv6 support may be disabled by setting:
 
 Licenses of statically linked libraries:
 
- Berkeley DB   New BSD license with additional requirement that linked
-               software must be free open source
- Boost         MIT-like license
- miniupnpc     New (3-clause) BSD license
- libsecp256k1  MIT License
+ |Library       |License                                                |
+ |--------------|---------------------------------------------------------|
+ |Berkeley DB   |New BSD license with additional requirement that linked software must be free open source|
+ |Boost         |MIT-like license                                       |
+ |miniupnpc     |New (3-clause) BSD license                             |
+ |libsecp256k1  |MIT License                                            |
 
 - Versions used in this release:
 -  GCC           4.3.3
