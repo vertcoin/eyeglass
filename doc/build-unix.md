@@ -19,7 +19,7 @@ See readme-qt.rst for instructions on building Vertcoin-Qt, the graphical user i
 Dependencies
 ---------------------
 
- |Library       |Purpose           |Description										
+ |Library       |Purpose           |Description						     |				
  |--------------|------------------|---------------------------------------------------------|
  |libssl        |SSL Support       |Secure communications				     |
  |libdb4.8      |Berkeley DB       |Blockchain & wallet storage				     |
