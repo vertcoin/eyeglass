@@ -82,7 +82,6 @@ libsecp256k1:
 	sudo apt-get install libgmp-dev
 	git clone https://github.com/bitcoin/secp256k1.git
 	cd secp256k1
-	git checkout dc407ed48cc3a26310763f61c9e5564ac2133e74
 	./autogen.sh
 	./configure
 	make
