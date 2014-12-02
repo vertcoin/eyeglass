@@ -1376,16 +1376,19 @@ public:
         vMerkleTree.clear();
     }
 
-    uint256 GetPoWHash() const
+    uint256 GetPoWHash(int height) const
     {
         uint256 thash;
         // Hardfork to Lyra2RE occurs on about the 15th December 2014 00:00:00 GMT
-        if(LastHeight+1 >= 209230)
+        printf("Choosing PoW Algo at height: %i... ", height);
+		if(height >= 201700)
         {
+			printf("Chose Lyra2RE\n");
             lyra2re_hash(BEGIN(nVersion), BEGIN(thash));
         }
         else
         {
+			printf("Chose Scrypt-N\n");
             scrypt_N_1_1_256(BEGIN(nVersion), BEGIN(thash), GetNfactor(nTime));
         }
         return thash;
@@ -1503,7 +1506,7 @@ public:
         }
 
         // Check the header
-        if (!CheckProofOfWork(GetPoWHash(), nBits))
+        if (!CheckProofOfWork(GetPoWHash(LastHeight+1), nBits))
             return error("CBlock::ReadFromDisk() : errors in block header");
 
         return true;
@@ -1516,7 +1519,7 @@ public:
         printf("CBlock(hash=%s, input=%s, PoW=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%" PRIszu")\n",
             GetHash().ToString().c_str(),
             HexStr(BEGIN(nVersion),BEGIN(nVersion)+80,false).c_str(),
-            GetPoWHash().ToString().c_str(),
+            GetPoWHash(LastHeight+1).ToString().c_str(),
             nVersion,
             hashPrevBlock.ToString().c_str(),
             hashMerkleRoot.ToString().c_str(),

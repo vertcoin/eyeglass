@@ -1329,16 +1329,16 @@ unsigned int static GetNextWorkRequired_V2(const CBlockIndex* pindexLast, const 
         	}
         }
 
-        /*if(pindexLast->nHeight == 187357)
+        if(pindexLast->nHeight+1 == 201700)
         {
             printf("Getting diff at %i. Diff = 0\n", pindexLast->nHeight+1);
             return 0x1e0ffff0;
         }
         else
         {
-            printf("Getting diff at %i. Diff = KGW\n", pindexLast->nHeight+1);*/
+            printf("Getting diff at %i. Diff = KGW\n", pindexLast->nHeight+1);
             return KimotoGravityWell(pindexLast, pblock, BlocksTargetSpacing, PastBlocksMin, PastBlocksMax);
-        //}
+        }
 }
 
 
@@ -2286,10 +2286,21 @@ bool CBlock::CheckBlock(CValidationState &state, bool fCheckPOW, bool fCheckMerk
         if (nTxids > 4500)
             return error("CheckBlock() : 15 August maxlocks violation");
     }
-
-    // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(GetPoWHash(), nBits))
-        return state.DoS(50, error("CheckBlock() : proof of work failed"));
+	
+	CBlockIndex* pindexPrev = NULL;
+    int nHeight = 0;
+    if (GetHash() != hashGenesisBlock)
+    {
+        map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(hashPrevBlock);
+        pindexPrev = (*mi).second;
+		if (!(pindexPrev == NULL))
+		{
+			nHeight = pindexPrev->nHeight+1;
+            // Check proof of work matches claimed amount
+            if (fCheckPOW && !CheckProofOfWork(GetPoWHash(nHeight), nBits))
+                return state.DoS(50, error("CheckBlock() : proof of work failed"));
+		}
+    }
 
     // Check timestamp
     if (GetBlockTime() > GetAdjustedTime() + 2 * 60 * 60)
@@ -4812,7 +4823,16 @@ void FormatHashBuffers(CBlock* pblock, char* pmidstate, char* pdata, char* phash
 
 bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
 {
-    uint256 hash = pblock->GetPoWHash();
+    CBlockIndex* pindexPrev = NULL;
+    int nHeight = 0;
+    if (pblock->GetHash() != hashGenesisBlock)
+    {
+        map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(pblock->hashPrevBlock);
+        pindexPrev = (*mi).second;
+        nHeight = pindexPrev->nHeight+1;
+    }
+    
+	uint256 hash = pblock->GetPoWHash(nHeight);
     uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
     printf("Hash found: %s", hash.GetHex().c_str());
 
@@ -4915,7 +4935,7 @@ void static VertcoinMiner(CWallet *pwallet)
             loop
             {
                 // Hardfork to Lyra2RE occurs on 1st December 2014 00:00:00 GMT
-                if(pindexPrev->nHeight+1 >= 209230)
+                if(pindexPrev->nHeight+1 >= 201700)
                 {
                     lyra2re_hash(BEGIN(pblock->nVersion), BEGIN(thash));
                 }
