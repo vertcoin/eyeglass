@@ -10,6 +10,7 @@
 #include "init.h"
 #include "util.h"
 #include "ui_interface.h"
+#include "Lyra2RE/Lyra2RE.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -513,7 +514,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     sa_hup.sa_flags = 0;
     sigaction(SIGHUP, &sa_hup, NULL);
 #endif
-    
+
 #if defined(USE_SSE2)
     unsigned int cpuid_edx=0;
 #if !defined(MAC_OSX) && (defined(_M_IX86) || defined(__i386__) || defined(__i386))

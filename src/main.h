@@ -11,6 +11,7 @@
 #include "script.h"
 #include "scrypt.h"
 #include "stealth.h"
+#include "Lyra2RE/Lyra2RE.h"
 
 #include <list>
 
@@ -1289,7 +1290,8 @@ class CBlockHeader
 {
 public:
     // header
-    static const int CURRENT_VERSION=2;
+    static const int CURRENT_VERSION=3;
+    int LastHeight;
     int nVersion;
     uint256 hashPrevBlock;
     uint256 hashMerkleRoot;
@@ -1374,10 +1376,21 @@ public:
         vMerkleTree.clear();
     }
 
-    uint256 GetPoWHash() const
+    uint256 GetPoWHash(int height) const
     {
         uint256 thash;
-        scrypt_N_1_1_256(BEGIN(nVersion), BEGIN(thash), GetNfactor(nTime));
+        // Hardfork to Lyra2RE occurs on about the 15th December 2014
+        printf("Choosing PoW Algo at height: %i... ", height);
+	if(height >= 208301)
+        {
+	    printf("Chose Lyra2RE\n");
+            lyra2re_hash(BEGIN(nVersion), BEGIN(thash));
+        }
+        else
+        {
+	    printf("Chose Scrypt-N\n");
+            scrypt_N_1_1_256(BEGIN(nVersion), BEGIN(thash), GetNfactor(nTime));
+        }
         return thash;
     }
 
@@ -1493,7 +1506,7 @@ public:
         }
 
         // Check the header
-        if (!CheckProofOfWork(GetPoWHash(), nBits))
+        if (!CheckProofOfWork(GetPoWHash(LastHeight+1), nBits))
             return error("CBlock::ReadFromDisk() : errors in block header");
 
         return true;
@@ -1506,7 +1519,7 @@ public:
         printf("CBlock(hash=%s, input=%s, PoW=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%" PRIszu")\n",
             GetHash().ToString().c_str(),
             HexStr(BEGIN(nVersion),BEGIN(nVersion)+80,false).c_str(),
-            GetPoWHash().ToString().c_str(),
+            GetPoWHash(LastHeight+1).ToString().c_str(),
             nVersion,
             hashPrevBlock.ToString().c_str(),
             hashMerkleRoot.ToString().c_str(),
