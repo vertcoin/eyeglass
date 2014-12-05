@@ -1316,9 +1316,14 @@ unsigned int static GetNextWorkRequired_V2(const CBlockIndex* pindexLast, const 
 
         if (fTestNet)
         {
+            // Set this to the testnet fork block
+            if(pindexLast->nHeight+1 == 208301)
+            {
+                printf("Getting diff at %i. Diff = 0\n", pindexLast->nHeight+1);
+                return 0x1e0ffff0;
+            }
         	if (pindexLast->nHeight+1 >= 6400)	 //hardfork testnet to 12 block difficulty adjustment interval
         	{
-
         		if ((pindexLast->nHeight+1) % nKGWInterval != 0)
         		{
         		CBigNum bnNew;
@@ -4935,7 +4940,8 @@ void static VertcoinMiner(CWallet *pwallet)
             loop
             {
                 // Hardfork to Lyra2RE occurs on about the 15th December 2014
-                if(pindexPrev->nHeight+1 >= 208301)
+                // testnet fork block needs to be updated
+                if((fTestNet && pindexPrev->nHeight+1 >= 208301) || pindexPrev->nHeight+1 >= 208301)
                 {
                     lyra2re_hash(BEGIN(pblock->nVersion), BEGIN(thash));
                 }
