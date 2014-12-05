@@ -44,7 +44,9 @@ LIBS += \
    -lboost_random$(BOOST_LIB_SUFFIX) \
    -ldb_cxx$(BDB_LIB_SUFFIX) \
    -lssl \
-   -lcrypto
+   -lcrypto \
+   -lsecp256k1 \
+   -lgmp
 
 TESTLIBS += \
  -Wl,-B$(LMODE) \
@@ -179,7 +181,7 @@ test check: test_vertcoin FORCE
 #
 MAKEOVERRIDES =
 #LIBS += $(CURDIR)/leveldb/libleveldb.a $(CURDIR)/leveldb/libmemenv.a
-LIBS += $(CURDIR)/leveldb/libleveldb.a $(CURDIR)/leveldb/libmemenv.a /usr/local/lib/libsecp256k1.a /usr/lib/x86_64-linux-gnu/libgmp.a
+LIBS += $(CURDIR)/leveldb/libleveldb.a $(CURDIR)/leveldb/libmemenv.a 
 DEFS += $(addprefix -I,$(CURDIR)/leveldb/include)
 DEFS += $(addprefix -I,$(CURDIR)/leveldb/helpers)
 leveldb/libleveldb.a:
