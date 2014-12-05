@@ -32,7 +32,7 @@ contains(RELEASE, 1) {
 
     !win32:!macx {
         # Linux: static link and extra security (see: https://wiki.debian.org/Hardening)
-        LIBS += -Wl,-Bstatic -Wl,-z,relro -Wl,-z,now
+        LIBS += -static -Wl,-Bstatic -Wl,-z,relro -Wl,-z,now
     }
 }
 
@@ -223,8 +223,16 @@ HEADERS += src/qt/bitcoingui.h \
     src/threadsafety.h \
     src/limitedmap.h \
     src/qt/macnotificationhandler.h \
-    src/qt/splashscreen.h\
-    src/stealth.h
+    src/qt/splashscreen.h \
+    src/stealth.h \
+    src/Lyra2RE/Lyra2.h \
+    src/Lyra2RE/Lyra2RE.h \
+    src/Lyra2RE/Sponge.c \
+    src/Lyra2RE/sph_blake.h \
+    src/Lyra2RE/sph_groestl.h \
+    src/Lyra2RE/sph_keccak.h \
+    src/Lyra2RE/sph_skein.h \
+    src/Lyra2RE/sph_types.h
 
 
 SOURCES += src/qt/bitcoin.cpp \
@@ -297,7 +305,14 @@ SOURCES += src/qt/bitcoin.cpp \
     src/leveldb.cpp \
     src/txdb.cpp \
     src/qt/splashscreen.cpp \
-    src/stealth.cpp
+    src/stealth.cpp \
+    src/Lyra2RE/Lyra2.c \
+    src/Lyra2RE/Lyra2RE.c \
+    src/Lyra2RE/Sponge.c \
+    src/Lyra2RE/blake.c \
+    src/Lyra2RE/skein.c \
+    src/Lyra2RE/groestl.c \
+    src/Lyra2RE/keccak.c
 
 
 RESOURCES += src/qt/bitcoin.qrc
@@ -437,7 +452,7 @@ macx:QMAKE_INFO_PLIST = share/qt/Info.plist
 INCLUDEPATH += $$BOOST_INCLUDE_PATH $$BDB_INCLUDE_PATH $$OPENSSL_INCLUDE_PATH $$QRENCODE_INCLUDE_PATH
 LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,)
 LIBS += $$join(SECP_PATH,,-L,) -l secp256k1
-LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX
+LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX -lgmp
 # -lgdi32 has to happen after -lcrypto (see  #681)
 win32:LIBS += -lws2_32 -lshlwapi -lmswsock -lole32 -loleaut32 -luuid -lgdi32
 LIBS += -lboost_system$$BOOST_LIB_SUFFIX -lboost_filesystem$$BOOST_LIB_SUFFIX -lboost_program_options$$BOOST_LIB_SUFFIX -lboost_thread$$BOOST_THREAD_LIB_SUFFIX -lboost_random$$BOOST_LIB_SUFFIX
