@@ -1197,11 +1197,13 @@ static const char *strMainNetDNSSeed[][2] = {
     {"ny.vertcoin.org", "ny.vertcoin.org"},
     {"la.vertcoin.org", "la.vertcoin.org"},
     {"eu.vertcoin.org", "eu.vertcoin.org"},
+    {"x11.greenpool.org.uk", "x11.greenpool.org.uk"},
+    {"lonelyrainbowgames.co.uk","lonelyrainbowgames.co.uk"},
     {NULL, NULL}
 };
 
 static const char *strTestNetDNSSeed[][2] = {
-    {"testnet-seed.vertcoin.org", "testnet-seed.vertcoin.org"},
+    {"test.vtc.sovereignshare.com", "wil-vtc01.greenpool.org.uk"},
     {NULL, NULL}
 };
 
