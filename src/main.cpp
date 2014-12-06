@@ -1323,16 +1323,14 @@ unsigned int static GetNextWorkRequired_V2(const CBlockIndex* pindexLast, const 
                 printf("Getting diff at %i. Diff = 0\n", pindexLast->nHeight+1);
                 return 0x1e0ffff0;
             }
-        	if (pindexLast->nHeight+1 >= 6400)	 //hardfork testnet to 12 block difficulty adjustment interval
-        	{
-        		if ((pindexLast->nHeight+1) % nKGWInterval != 0)
-        		{
-        		CBigNum bnNew;
-        		bnNew.SetCompact(pindexLast->nBits);
-        		if (bnNew > bnProofOfWorkLimit) { bnNew = bnProofOfWorkLimit; }
-        		return bnNew.GetCompact();
-        		}
-        	}
+      	    // testnet to 12 block difficulty adjustment interval
+	    if ((pindexLast->nHeight+1) % nKGWInterval != 0)
+	    {
+		CBigNum bnNew;
+		bnNew.SetCompact(pindexLast->nBits);
+		if (bnNew > bnProofOfWorkLimit) { bnNew = bnProofOfWorkLimit; }
+		return bnNew.GetCompact();
+	    }
         }
 
         if(pindexLast->nHeight+1 == 208301)
