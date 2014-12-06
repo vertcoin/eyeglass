@@ -1380,10 +1380,11 @@ public:
     {
         uint256 thash;
         // Hardfork to Lyra2RE occurs on about the 15th December 2014
-        printf("Choosing PoW Algo at height: %i... ", height);
-	if(height >= 208301)
+        // testnet fork set to 100
+	printf("Choosing PoW Algo at height: %i... ", height);
+        if((fTestNet && height >= 100) || height >= 208301)
         {
-	    printf("Chose Lyra2RE\n");
+            printf("Chose Lyra2RE\n");
             lyra2re_hash(BEGIN(nVersion), BEGIN(thash));
         }
         else
