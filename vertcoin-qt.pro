@@ -32,7 +32,7 @@ contains(RELEASE, 1) {
 
     !win32:!macx {
         # Linux: static link and extra security (see: https://wiki.debian.org/Hardening)
-        LIBS += -static -Wl,-Bstatic -Wl,-z,relro -Wl,-z,now
+        LIBS += -Wl,-Bstatic -Wl,-z,relro -Wl,-z,now
     }
 }
 
