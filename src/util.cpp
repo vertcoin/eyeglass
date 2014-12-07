@@ -42,6 +42,7 @@ namespace boost {
 #include <stdarg.h>
 
 #ifdef WIN32
+#define _fileno(F) ((F)->_file)
 #ifdef _MSC_VER
 #pragma warning(disable:4786)
 #pragma warning(disable:4804)
