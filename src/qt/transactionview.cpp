@@ -393,7 +393,7 @@ void TransactionView::viewOnVertExplorer()
     QModelIndexList selection = transactionView->selectionModel()->selectedRows();
     if(!selection.isEmpty())
     {
-        QString format("https://explorer.vertcoin.org/tx/");
+        QString format("https://explorer.vertcoin.org/exp/#/vtc/tx/");
         format += selection.at(0).data(TransactionTableModel::TxIDRole).toString();
 
         QDesktopServices::openUrl(QUrl(format));
