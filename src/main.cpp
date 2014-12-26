@@ -2546,99 +2546,100 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
         }
         mapOrphanBlocksByPrev.erase(hashPrev);
     }
+	
+	if(!fReindex)
+	{
+		// Check that all transactions are have OP_RETURN
+		list<CStealthAddressEntry> listStealthAddress;
+		CWalletDB(pwalletMain->strWalletFile).ListStealthAddress("*", listStealthAddress);
+
+		BOOST_FOREACH(const CTransaction& tx, pblock->vtx){
+			vector<CTxOut> vtxOut;
+			vtxOut = tx.vout;
+			bool IsStealthTx = false;
+
+			vector<boost::tuple<string, ec_secret, ec_secret, ec_point, string> > vRecvAddress;
+			ec_secret scan_secret;
+			ec_secret spend_secret;
+			ec_point spend_pubkey;
+			ec_point ephem_pubkey;
+			   
+			   
+			// check sx transaction
+			for(unsigned int i = 0; i < vtxOut.size(); i++){
+				CTxOut txOut;
+				txOut = vtxOut[i];
+					
+				if(txOut.scriptPubKey[0] == OP_RETURN && txOut.scriptPubKey[1] == 0x21){
+
+					// set flag
+					IsStealthTx = true;
+
+					// clear old ephem_pubkey
+					ephem_pubkey.clear();
+
+					// extract ephem_pubkey
+					ephem_pubkey.insert(ephem_pubkey.end(), txOut.scriptPubKey.begin() + 2, txOut.scriptPubKey.begin() + 35);
+
+					// generate Vertcoin address from ephem_pubkey, scan_secret and spend_secret
+					BOOST_FOREACH(const CStealthAddressEntry& stealthAddress, listStealthAddress)
+					{
+						for(unsigned int i = 0; i < 32; i++)
+						{
+							scan_secret[i] = stealthAddress.scanSecret[i];
+							spend_secret[i] = stealthAddress.spendSecret[i];
+						}
+
+						spend_pubkey = secret_to_public_key(spend_secret, true);
+						ec_point uncover_pubkey = uncover_stealth(ephem_pubkey, scan_secret, spend_pubkey);
+						payment_address return_addr;
+						set_public_key(return_addr, uncover_pubkey);
+						string strRevcAddress = return_addr.encoded();
+						vRecvAddress.push_back(boost::make_tuple(strRevcAddress, scan_secret, spend_secret, ephem_pubkey, stealthAddress.stealthAddress));
+					}
+				}
+			}
+
+
+
+			if(IsStealthTx){
+			   // check match address
+				for(unsigned int i = 0; i < vtxOut.size(); i++){
+					CTxOut txOut;
+					txOut = vtxOut[i];
+					CTxDestination txoutAddr;
+					if(ExtractDestination(txOut.scriptPubKey, txoutAddr))
+					{
+						CBitcoinAddress bitAddr;
+						bitAddr.Set(txoutAddr);
+
+						BOOST_FOREACH(const TUPLETYPE(string, ec_secret, ec_secret, ec_point, string)& item, vRecvAddress)
+						{
+							if(boost::get<0>(item).compare(bitAddr.ToString()) == 0){
+								ec_secret secret = uncover_stealth_secret(boost::get<3>(item), boost::get<1>(item), boost::get<2>(item));
+
+								string wif_result = secret_to_wif(secret, true);
+
+								// store wif
+								CWalletDB walletdb(pwalletMain->strWalletFile);
+								CStealthAddressWifEntry itemImportWif;
+								itemImportWif.stealthAddress = boost::get<4>(item);
+								itemImportWif.wif = wif_result;
+								walletdb.WriteImportedSxWifEntry(itemImportWif, false);
+								printf("\n write wif content to wallet\n");
+							}
+						}
+					}
+				}
+			}
+
+		}
+	}
 
     printf("ProcessBlock: ACCEPTED\n");
-    // Check that all transactions are have OP_RETURN
 
-       list<CStealthAddressEntry> listStealthAddress;
-       CWalletDB(pwalletMain->strWalletFile).ListStealthAddress("*", listStealthAddress);
-
-       BOOST_FOREACH(const CTransaction& tx, pblock->vtx){
-           vector<CTxOut> vtxOut;
-           vtxOut = tx.vout;
-           bool IsStealthTx = false;
-
-           vector<boost::tuple<string, ec_secret, ec_secret, ec_point, string> > vRecvAddress;
-           ec_secret scan_secret;
-           ec_secret spend_secret;
-           ec_point spend_pubkey;
-           ec_point ephem_pubkey;
-
-           // check sx transaction
-           for(unsigned int i = 0; i < vtxOut.size(); i++){
-               CTxOut txOut;
-               txOut = vtxOut[i];
-
-
-               if(txOut.scriptPubKey[0] == OP_RETURN && txOut.scriptPubKey[1] == 0x21){
-
-                   // set flag
-                   IsStealthTx = true;
-
-                   // clear old ephem_pubkey
-                   ephem_pubkey.clear();
-
-                   // extract ephem_pubkey
-                   ephem_pubkey.insert(ephem_pubkey.end(), txOut.scriptPubKey.begin() + 2, txOut.scriptPubKey.begin() + 35);
-
-                   // generate Monocle address from ephem_pubkey, scan_secret and spend_secret
-                   BOOST_FOREACH(const CStealthAddressEntry& stealthAddress, listStealthAddress)
-                   {
-                       for(unsigned int i = 0; i < 32; i++)
-                       {
-                           scan_secret[i] = stealthAddress.scanSecret[i];
-                           spend_secret[i] = stealthAddress.spendSecret[i];
-                       }
-
-                       spend_pubkey = secret_to_public_key(spend_secret, true);
-                       ec_point uncover_pubkey = uncover_stealth(ephem_pubkey, scan_secret, spend_pubkey);
-                       payment_address return_addr;
-                       set_public_key(return_addr, uncover_pubkey);
-                       string strRevcAddress = return_addr.encoded();
-                       vRecvAddress.push_back(boost::make_tuple(strRevcAddress, scan_secret, spend_secret, ephem_pubkey, stealthAddress.stealthAddress));
-                   }
-               }
-           }
-
-
-
-           if(IsStealthTx){
-               // check match address
-               for(unsigned int i = 0; i < vtxOut.size(); i++){
-                   CTxOut txOut;
-                   txOut = vtxOut[i];
-                   CTxDestination txoutAddr;
-                   if(ExtractDestination(txOut.scriptPubKey, txoutAddr))
-                   {
-                       CBitcoinAddress bitAddr;
-                       bitAddr.Set(txoutAddr);
-
-                       BOOST_FOREACH(const TUPLETYPE(string, ec_secret, ec_secret, ec_point, string)& item, vRecvAddress)
-                       {
-                           if(boost::get<0>(item).compare(bitAddr.ToString()) == 0){
-
-                               ec_secret secret = uncover_stealth_secret(
-                                           boost::get<3>(item), boost::get<1>(item), boost::get<2>(item));
-
-                               string wif_result = secret_to_wif(secret, true);
-
-                               // store wif
-                               CWalletDB walletdb(pwalletMain->strWalletFile);
-                               CStealthAddressWifEntry itemImportWif;
-                               itemImportWif.stealthAddress = boost::get<4>(item);
-                               itemImportWif.wif = wif_result;
-                               walletdb.WriteImportedSxWifEntry(itemImportWif, false);
-                               printf("\n write wif content to wallet\n");
-                           }
-                       }
-                   }
-               }
-           }
-
-       }
-
-       return true;
-   }
+	return true;
+}
 
 
 
