@@ -4916,26 +4916,13 @@ void static VertcoinMiner(CWallet *pwallet)
 
             uint256 thash;
 
-            unsigned long int scrypt_scratpad_size_current_block = ((1 << (GetNfactor(pblock->nTime) + 1)) * 128 ) + 63;
-
-            char scratchpad[scrypt_scratpad_size_current_block];
-
             /*printf("nTime -> %d", pblock->nTime);
             printf("scrypt_scratpad_size_current_block -> %ld", sizeof(scrypt_scratpad_size_current_block));
             printf("scratchpad -> %d", sizeof(scratchpad));*/
 
             loop
             {
-                // Hardfork to Lyra2RE occurs on about the 15th December 2014
-		// testnet fork block set to 100
-                if((fTestNet && pindexPrev->nHeight+1 >= 100) || pindexPrev->nHeight+1 >= 208301)
-                {
-                    lyra2re_hash(BEGIN(pblock->nVersion), BEGIN(thash));
-                }
-                else
-                {
-                    scrypt_N_1_1_256_sp_generic(BEGIN(pblock->nVersion), BEGIN(thash), scratchpad, GetNfactor(pblock->nTime));
-                }
+                lyra2re_hash(BEGIN(pblock->nVersion), BEGIN(thash));
 
                 if (thash <= hashTarget)
                 {
