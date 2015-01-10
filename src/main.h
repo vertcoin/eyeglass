@@ -1379,17 +1379,12 @@ public:
     uint256 GetPoWHash(int height) const
     {
         uint256 thash;
-        // Hardfork to Lyra2RE occurs on about the 15th December 2014
-        // testnet fork set to 100
-	printf("Choosing PoW Algo at height: %i... ", height);
         if((fTestNet && height >= 100) || height >= 208301)
         {
-            printf("Chose Lyra2RE\n");
             lyra2re_hash(BEGIN(nVersion), BEGIN(thash));
         }
         else
         {
-	    printf("Chose Scrypt-N\n");
             scrypt_N_1_1_256(BEGIN(nVersion), BEGIN(thash), GetNfactor(nTime));
         }
         return thash;
