@@ -1336,12 +1336,10 @@ unsigned int static GetNextWorkRequired_V2(const CBlockIndex* pindexLast, const 
 
         if(pindexLast->nHeight+1 == 208301)
         {
-            printf("Getting diff at %i. Diff = 0\n", pindexLast->nHeight+1);
             return 0x1e0ffff0;
         }
         else
         {
-            printf("Getting diff at %i. Diff = KGW\n", pindexLast->nHeight+1);
             return KimotoGravityWell(pindexLast, pblock, BlocksTargetSpacing, PastBlocksMin, PastBlocksMax);
         }
 }
