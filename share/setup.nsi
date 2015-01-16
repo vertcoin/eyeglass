@@ -5,9 +5,9 @@ SetCompressor /SOLID lzma
 
 # General Symbol Definitions
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 0.9.0.1
+!define VERSION 0.9.0.2
 !define COMPANY "Vertcoin project"
-!define URL http://www.vertcoin.org/
+!define URL https://www.vertcoin.org/
 
 # MUI Symbol Definitions
 !define MUI_ICON "../share/pixmaps/vertcoin.ico"
