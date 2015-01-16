@@ -48,6 +48,7 @@ bool fImporting = false;
 bool fReindex = false;
 bool fBenchmark = false;
 bool fTxIndex = false;
+bool fDisableWallet = false;
 unsigned int nCoinCacheSize = 5000;
 int64 nChainStartTime = 1389306217; // Line: 2815
 
@@ -2296,8 +2297,8 @@ bool CBlock::CheckBlock(CValidationState &state, bool fCheckPOW, bool fCheckMerk
     if (GetHash() != hashGenesisBlock)
     {
         map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(hashPrevBlock);
-        pindexPrev = (*mi).second;
-		if (!(pindexPrev == NULL))
+		pindexPrev = (*mi).second;
+		if (pindexPrev != NULL && !fDisableWallet)
 		{
 			nHeight = pindexPrev->nHeight+1;
             // Check proof of work matches claimed amount
@@ -2534,7 +2535,7 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
         mapOrphanBlocksByPrev.erase(hashPrev);
     }
 	
-	if(!fReindex)
+	if(!fReindex && !fDisableWallet)
 	{
 		// Check that all transactions are have OP_RETURN
 		list<CStealthAddressEntry> listStealthAddress;
