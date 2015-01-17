@@ -2296,14 +2296,17 @@ bool CBlock::CheckBlock(CValidationState &state, bool fCheckPOW, bool fCheckMerk
     {
         map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(hashPrevBlock);
 		pindexPrev = (*mi).second;
-		if (pindexPrev != NULL && !fDisableWallet)
+		if (mi != mapBlockIndex.end())
 		{
-			nHeight = pindexPrev->nHeight+1;
-            // Check proof of work matches claimed amount
-            if (fCheckPOW && !CheckProofOfWork(GetPoWHash(nHeight), nBits))
-                return state.DoS(50, error("CheckBlock() : proof of work failed"));
+			if (pindexPrev != NULL && !fDisableWallet)
+			{
+				nHeight = pindexPrev->nHeight+1;
+				// Check proof of work matches claimed amount
+				if (fCheckPOW && !CheckProofOfWork(GetPoWHash(nHeight), nBits))
+					return state.DoS(50, error("CheckBlock() : proof of work failed"));
+			}
 		}
-    }
+	}
 
     // Check timestamp
     if (GetBlockTime() > GetAdjustedTime() + 2 * 60 * 60)
