@@ -6,8 +6,8 @@
 # Mac OS X makefile for bitcoin
 # Originally by Laszlo Hanyecz (solar@heliacal.net)
 
-CXX=llvm-g++
-CC=llvm-gcc
+CXX=clang++
+CC=clang
 ifeq ("$(shell port)", "") # homebrew
     DEPSDIR=/usr/local
     BDB_LIB_PATH=$(DEPSDIR)/Cellar/berkeley-db4/4.8.30/lib
