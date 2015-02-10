@@ -6,7 +6,8 @@
 # Mac OS X makefile for bitcoin
 # Originally by Laszlo Hanyecz (solar@heliacal.net)
 
-CXX=llvm-g++
+CXX=clang++
+CC=clang
 ifeq ("$(shell port)", "") # homebrew
     DEPSDIR=/usr/local
     BDB_LIB_PATH=$(DEPSDIR)/Cellar/berkeley-db4/4.8.30/lib
@@ -60,7 +61,10 @@ LIBS += \
  -lboost_chrono-mt \
  -lssl \
  -lcrypto \
- -lz
+ -lz \
+ -lgmp \
+ -lsecp256k1
+
 TESTDEFS += -DBOOST_TEST_DYN_LINK
 endif
 
@@ -70,13 +74,13 @@ ifdef RELEASE
 # Compile for maximum compatibility and smallest size.
 # This requires that dependencies are compiled
 # the same way.
-CFLAGS = -mmacosx-version-min=10.5 -arch i386 -O3
+CFLAGS = -mmacosx-version-min=10.8 -arch i386 -O3
 else
 DEBUGFLAGS = -g
 endif
 
 # osx 10.9 has changed the stdlib default to libc++. To prevent some link error, you may need to use libstdc++
-CFLAGS += -stdlib=libstdc++
+CFLAGS += -stdlib=libc++ -std=c++0x
 
 # ppc doesn't work because we don't support big-endian
 CFLAGS += -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter \
@@ -114,7 +118,15 @@ OBJS= \
     obj/bloom.o \
     obj/noui.o \
     obj/leveldb.o \
-    obj/txdb.o
+    obj/txdb.o \
+    obj/stealth.o \
+    Lyra2RE/Sponge.o \
+    Lyra2RE/Lyra2.o \
+    Lyra2RE/Lyra2RE.o \
+    Lyra2RE/blake.o \
+    Lyra2RE/groestl.o \
+    Lyra2RE/keccak.o \
+    Lyra2RE/skein.o
 
 ifdef USE_SSE2
 DEFS += -DUSE_SSE2
@@ -174,6 +186,9 @@ obj/%.o: %.cpp
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 	      -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
 	  rm -f $(@:%.o=%.d)
+
+Lyra2RE/%.o: Lyra2RE/%.c
+	$(CC) -c -O3 -o $@ $<
 
 vertcoind: $(OBJS:obj/%=obj/%)
 	$(CXX) $(CFLAGS) -o $@ $(LIBPATHS) $^ $(LIBS)
