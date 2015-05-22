@@ -147,18 +147,23 @@ public:
     ~init_singleton()
     {
         if (init_done_)
-            secp256k1_stop();
+            secp256k1_context_destroy(ctx);
     }
     void init()
     {
         if (init_done_)
             return;
-        secp256k1_start(SECP256K1_START_SIGN | SECP256K1_START_VERIFY);
+        ctx = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
         init_done_ = true;
+    }
+    secp256k1_context_t* getContext()
+    {
+	return ctx;
     }
 
 private:
     bool init_done_;
+    secp256k1_context_t* ctx;
 };
 
 static init_singleton init;
