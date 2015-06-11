@@ -28,11 +28,11 @@ SignVerifyMessageDialog::SignVerifyMessageDialog(QWidget *parent) :
 
 #if (QT_VERSION >= 0x040700)
     /* Do not move this to the XML file, Qt before 4.7 will choke on it */
-    ui->addressIn_SM->setPlaceholderText(tr("Enter a Vertcoin address (e.g. Vg6KN8SSPGuwxy3gwDodxghD3YHqqTpzDs)"));
+    ui->addressIn_SM->setPlaceholderText(tr("Enter a EyeGlass address (e.g. Vg6KN8SSPGuwxy3gwDodxghD3YHqqTpzDs)"));
     ui->signatureOut_SM->setPlaceholderText(tr("Click \"Sign Message\" to generate signature"));
 
-    ui->addressIn_VM->setPlaceholderText(tr("Enter a Vertcoin address (e.g. Vg6KN8SSPGuwxy3gwDodxghD3YHqqTpzDs)"));
-    ui->signatureIn_VM->setPlaceholderText(tr("Enter Vertcoin signature"));
+    ui->addressIn_VM->setPlaceholderText(tr("Enter a EyeGlass address (e.g. Vg6KN8SSPGuwxy3gwDodxghD3YHqqTpzDs)"));
+    ui->signatureIn_VM->setPlaceholderText(tr("Enter EyeGlass signature"));
 #endif
 
     GUIUtil::setupAddressWidget(ui->addressIn_SM, this);

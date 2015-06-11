@@ -114,7 +114,7 @@ Value getnewaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "getnewaddress [account]\n"
-            "Returns a new Vertcoin address for receiving payments.  "
+            "Returns a new EyeGlass address for receiving payments.  "
             "If [account] is specified (recommended), it is added to the address book "
             "so payments received with the address will be credited to [account].");
 
@@ -181,7 +181,7 @@ Value getaccountaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() != 1)
         throw runtime_error(
             "getaccountaddress <account>\n"
-            "Returns the current Vertcoin address for receiving payments to this account.");
+            "Returns the current EyeGlass address for receiving payments to this account.");
 
     // Parse the account first so we don't generate a key if there's an error
     string strAccount = AccountFromValue(params[0]);
@@ -199,12 +199,12 @@ Value setaccount(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "setaccount <vertcoinaddress> <account>\n"
+            "setaccount <eyeglassaddress> <account>\n"
             "Sets the account associated with the given address.");
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid EyeGlass address");
 
 
     string strAccount;
@@ -229,12 +229,12 @@ Value getaccount(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "getaccount <vertcoinaddress>\n"
+            "getaccount <eyeglassaddress>\n"
             "Returns the account associated with the given address.");
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid EyeGlass address");
 
     string strAccount;
     map<CTxDestination, string>::iterator mi = pwalletMain->mapAddressBook.find(address.Get());
@@ -287,13 +287,13 @@ Value sendtoaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 4)
         throw runtime_error(
-            "sendtoaddress <vertcoinaddress> <amount> [comment] [comment-to]\n"
+            "sendtoaddress <eyeglassaddress> <amount> [comment] [comment-to]\n"
             "<amount> is a real and is rounded to the nearest 0.00000001"
             + HelpRequiringPassphrase());
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid EyeGlass address");
 
     // Amount
     int64 nAmount = AmountFromValue(params[1]);
@@ -351,7 +351,7 @@ Value signmessage(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 2)
         throw runtime_error(
-            "signmessage <vertcoinaddress> <message>\n"
+            "signmessage <eyeglassaddress> <message>\n"
             "Sign a message with the private key of an address");
 
     EnsureWalletIsUnlocked();
@@ -386,7 +386,7 @@ Value verifymessage(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 3)
         throw runtime_error(
-            "verifymessage <vertcoinaddress> <signature> <message>\n"
+            "verifymessage <eyeglassaddress> <signature> <message>\n"
             "Verify a signed message");
 
     string strAddress  = params[0].get_str();
@@ -423,14 +423,14 @@ Value getreceivedbyaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "getreceivedbyaddress <vertcoinaddress> [minconf=1]\n"
-            "Returns the total amount received by <vertcoinaddress> in transactions with at least [minconf] confirmations.");
+            "getreceivedbyaddress <eyeglassaddress> [minconf=1]\n"
+            "Returns the total amount received by <eyeglassaddress> in transactions with at least [minconf] confirmations.");
 
     // Bitcoin address
     CBitcoinAddress address = CBitcoinAddress(params[0].get_str());
     CScript scriptPubKey;
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid EyeGlass address");
     scriptPubKey.SetDestination(address.Get());
     if (!IsMine(*pwalletMain,scriptPubKey))
         return (double)0.0;
@@ -644,14 +644,14 @@ Value sendfrom(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 3 || params.size() > 6)
         throw runtime_error(
-            "sendfrom <fromaccount> <tovertcoinaddress> <amount> [minconf=1] [comment] [comment-to]\n"
+            "sendfrom <fromaccount> <toeyeglassaddress> <amount> [minconf=1] [comment] [comment-to]\n"
             "<amount> is a real and is rounded to the nearest 0.00000001"
             + HelpRequiringPassphrase());
 
     string strAccount = AccountFromValue(params[0]);
     CBitcoinAddress address(params[1].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid EyeGlass address");
     int64 nAmount = AmountFromValue(params[2]);
     int nMinDepth = 1;
     if (params.size() > 3)
@@ -707,7 +707,7 @@ Value sendmany(const Array& params, bool fHelp)
     {
         CBitcoinAddress address(s.name_);
         if (!address.IsValid())
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid Vertcoin address: ")+s.name_);
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid EyeGlass address: ")+s.name_);
 
         if (setAddress.count(address))
             throw JSONRPCError(RPC_INVALID_PARAMETER, string("Invalid parameter, duplicated address: ")+s.name_);
@@ -764,7 +764,7 @@ static CScript _createmultisig(const Array& params)
     {
         const std::string& ks = keys[i].get_str();
 
-        // Case 1: Vertcoin address and we have full public key:
+        // Case 1: EyeGlass address and we have full public key:
         CBitcoinAddress address(ks);
         if (pwalletMain && address.IsValid())
         {
@@ -805,7 +805,7 @@ Value addmultisigaddress(const Array& params, bool fHelp)
     {
         string msg = "addmultisigaddress <nrequired> <'[\"key\",\"key\"]'> [account]\n"
             "Add a nrequired-to-sign multisignature address to the wallet\"\n"
-            "each key is a Vertcoin address or hex-encoded public key\n"
+            "each key is a EyeGlass address or hex-encoded public key\n"
             "If [account] is specified, assign address to [account].";
         throw runtime_error(msg);
     }
@@ -830,7 +830,7 @@ Value createmultisig(const Array& params, bool fHelp)
         string msg = "createmultisig <nrequired> <'[\"key\",\"key\"]'>\n"
             "Creates a multi-signature address and returns a json object\n"
             "with keys:\n"
-            "address : vertcoin address\n"
+            "address : eyeglass address\n"
             "redeemScript : hex-encoded redemption script";
         throw runtime_error(msg);
     }
@@ -1494,7 +1494,7 @@ Value encryptwallet(const Array& params, bool fHelp)
     // slack space in .dat files; that is bad if the old data is
     // unencrypted private keys. So:
     StartShutdown();
-    return "wallet encrypted; Vertcoin server stopping, restart to run with encrypted wallet. The keypool has been flushed, you need to make a new backup.";
+    return "wallet encrypted; EyeGlass server stopping, restart to run with encrypted wallet. The keypool has been flushed, you need to make a new backup.";
 }
 
 class DescribeAddressVisitor : public boost::static_visitor<Object>
@@ -1550,8 +1550,8 @@ Value validateaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "validateaddress <vertcoinaddress>\n"
-            "Return information about <vertcoinaddress>.");
+            "validateaddress <eyeglassaddress>\n"
+            "Return information about <eyeglassaddress>.");
 
     CBitcoinAddress address(params[0].get_str());
     bool isValid = address.IsValid();
@@ -1657,7 +1657,7 @@ Value getnewstealthaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
                 "getnewstealthaddress [account]\n"
-                "Returns a new Vertcoin Stealth address for receiving payments.  "
+                "Returns a new EyeGlass Stealth address for receiving payments.  "
                 "If [account] is specified (recommended), it is added to the address book "
                 "so payments received with the address will be credited to [account].");
 
@@ -1706,9 +1706,9 @@ Value liststealthaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
               "liststealthaddress [account]\n"
-              "Returns a list of Vertcoin Stealth address"
+              "Returns a list of EyeGlass Stealth address"
               "If [account] is specified (recommended), it will return only for that account"
-              "NOTE: This account doesn't relate to Vertcoin address accounts");
+              "NOTE: This account doesn't relate to EyeGlass address accounts");
 
 
     string strAccount;
@@ -1743,7 +1743,7 @@ Value resetprikeystatus(const Array& params, bool fHelp)
     if (fHelp || params.size() != 0)
         throw runtime_error(
               "resetprikeystatus\n"
-              "Resets all private keys which belong to Vertcoin Stealth address");
+              "Resets all private keys which belong to EyeGlass Stealth address");
 
     list<CStealthAddressWifEntry> listImportSxWif;
     CWalletDB(pwalletMain->strWalletFile).ListImportedSxWif(listImportSxWif, true);
@@ -1823,13 +1823,13 @@ Value sendtostealthaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 4)
         throw runtime_error(
-            "sendtostealthaddress <vertcoinstealthaddress> <amount> [comment] [comment-to]\n"
+            "sendtostealthaddress <eyeglassstealthaddress> <amount> [comment] [comment-to]\n"
             "<amount> is a real and is rounded to the nearest 0.00000001"
             + HelpRequiringPassphrase());
 
     stealth_address recv;
     if (!recv.set_encoded(params[0].get_str()))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin stealth address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid EyeGlass stealth address");
 
     // Amount
     int64 nAmount = AmountFromValue(params[1]);
@@ -1877,7 +1877,7 @@ Value sendtostealthaddress(const Array& params, bool fHelp)
 
     CBitcoinAddress address(strAddrTmp);
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid EyeGlass address");
 
     string strError = pwalletMain->SendMoneyToStealthDestination(address.Get(), nAmount, wtx, ephem_secret);
     if (strError != "")
@@ -1891,7 +1891,7 @@ Value sendstealthfrom(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 3 || params.size() > 6)
         throw runtime_error(
-            "sendstealthfrom <fromaccount> <tovertcoinstealthaddress> <amount> [minconf=1] [comment] [comment-to]\n"
+            "sendstealthfrom <fromaccount> <toeyeglassstealthaddress> <amount> [minconf=1] [comment] [comment-to]\n"
             "<amount> is a real and is rounded to the nearest 0.00000001"
             + HelpRequiringPassphrase());
 
@@ -1899,7 +1899,7 @@ Value sendstealthfrom(const Array& params, bool fHelp)
 
     stealth_address recv;
     if (!recv.set_encoded(params[1].get_str()))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin stealth address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid EyeGlass stealth address");
 
     bool reuse_key = recv.options & stealth_address::reuse_key_option;
     // Get our scan and spend pubkeys.
@@ -1931,7 +1931,7 @@ Value sendstealthfrom(const Array& params, bool fHelp)
 
     CBitcoinAddress address(addressTmp);
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Vertcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid EyeGlass address");
 
 
     int64 nAmount = AmountFromValue(params[2]);

@@ -272,7 +272,7 @@ class CBitcoinAddress : public CBase58Data
 public:
     enum
     {
-        PUBKEY_ADDRESS = 71, // Vertcoin addresses start with V
+        PUBKEY_ADDRESS = 71, // EyeGlass addresses start with V
         SCRIPT_ADDRESS = 5,
         PUBKEY_ADDRESS_TEST = 74,
         SCRIPT_ADDRESS_TEST = 196,

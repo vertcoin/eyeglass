@@ -4,13 +4,13 @@
     <name>AboutDialog</name>
     <message>
         <location filename="../forms/aboutdialog.ui" line="+14"/>
-        <source>About Vertcoin</source>
-        <translation>O Vertcoinu</translation>
+        <source>About EyeGlass</source>
+        <translation>O EyeGlassu</translation>
     </message>
     <message>
         <location line="+39"/>
-        <source>&lt;b&gt;Vertcoin&lt;/b&gt; version</source>
-        <translation>&lt;b&gt;Vertcoin&lt;/b&gt; verze</translation>
+        <source>&lt;b&gt;EyeGlass&lt;/b&gt; version</source>
+        <translation>&lt;b&gt;EyeGlass&lt;/b&gt; verze</translation>
     </message>
     <message>
         <location line="+57"/>
@@ -34,8 +34,8 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     </message>
     <message>
         <location line="+0"/>
-        <source>The Vertcoin developers</source>
-        <translation>Vývojáři Vertcoinu</translation>
+        <source>The EyeGlass developers</source>
+        <translation>Vývojáři EyeGlassu</translation>
     </message>
 </context>
 <context>
@@ -67,8 +67,8 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="+63"/>
-        <source>These are your Vertcoin addresses for receiving payments. You may want to give a different one to each sender so you can keep track of who is paying you.</source>
-        <translation>Tohle jsou tvé Vertcoinové adresy pro příjem plateb. Můžeš dát pokaždé každému plátci novou adresu, abys věděl, kdo ti kdy kolik platil.</translation>
+        <source>These are your EyeGlass addresses for receiving payments. You may want to give a different one to each sender so you can keep track of who is paying you.</source>
+        <translation>Tohle jsou tvé EyeGlassové adresy pro příjem plateb. Můžeš dát pokaždé každému plátci novou adresu, abys věděl, kdo ti kdy kolik platil.</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="+14"/>
@@ -82,8 +82,8 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     </message>
     <message>
         <location line="+11"/>
-        <source>Sign a message to prove you own a Vertcoin address</source>
-        <translation>Podepiš zprávu, čímž prokážeš, že jsi vlastníkem Vertcoinové adresy</translation>
+        <source>Sign a message to prove you own a EyeGlass address</source>
+        <translation>Podepiš zprávu, čímž prokážeš, že jsi vlastníkem EyeGlassové adresy</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -107,8 +107,8 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     </message>
     <message>
         <location line="-44"/>
-        <source>Verify a message to ensure it was signed with a specified Vertcoin address</source>
-        <translation>Ověř zprávu, aby ses ujistil, že byla podepsána danou Vertcoinovou adresou</translation>
+        <source>Verify a message to ensure it was signed with a specified EyeGlass address</source>
+        <translation>Ověř zprávu, aby ses ujistil, že byla podepsána danou EyeGlassovou adresou</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -122,8 +122,8 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="-5"/>
-        <source>These are your Vertcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Tohle jsou tvé Vertcoinové adresy pro posílání plateb. Před odesláním mincí si vždy zkontroluj částku a cílovou adresu.</translation>
+        <source>These are your EyeGlass addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Tohle jsou tvé EyeGlassové adresy pro posílání plateb. Před odesláním mincí si vždy zkontroluj částku a cílovou adresu.</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -248,8 +248,8 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     </message>
     <message>
         <location line="+1"/>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR VERTCOINS&lt;/b&gt;!</source>
-        <translation>Varování: Pokud si zašifruješ peněženku a ztratíš či zapomeneš heslo, &lt;b&gt;PŘIJDEŠ O VŠECHNY VERTCOINY&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR EYEGLASSS&lt;/b&gt;!</source>
+        <translation>Varování: Pokud si zašifruješ peněženku a ztratíš či zapomeneš heslo, &lt;b&gt;PŘIJDEŠ O VŠECHNY EYEGLASSY&lt;/b&gt;!</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -275,8 +275,8 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     </message>
     <message>
         <location line="-56"/>
-        <source>Vertcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your vertcoins from being stolen by malware infecting your computer.</source>
-        <translation>Vertcoin se teď ukončí, aby dokončil zašifrování. Pamatuj však, že pouhé zašifrování peněženky úplně nezabraňuje krádeži tvých vertcoinů malwarem, kterým se může počítač nakazit.</translation>
+        <source>EyeGlass will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your eyeglasss from being stolen by malware infecting your computer.</source>
+        <translation>EyeGlass se teď ukončí, aby dokončil zašifrování. Pamatuj však, že pouhé zašifrování peněženky úplně nezabraňuje krádeži tvých eyeglassů malwarem, kterým se může počítač nakazit.</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -374,8 +374,8 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     </message>
     <message>
         <location line="+4"/>
-        <source>Show information about Vertcoin</source>
-        <translation>Zobraz informace o Vertcoinu</translation>
+        <source>Show information about EyeGlass</source>
+        <translation>Zobraz informace o EyeGlassu</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -419,13 +419,13 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     </message>
     <message>
         <location line="-347"/>
-        <source>Send coins to a Vertcoin address</source>
-        <translation>Pošli mince na Vertcoinovou adresu</translation>
+        <source>Send coins to a EyeGlass address</source>
+        <translation>Pošli mince na EyeGlassovou adresu</translation>
     </message>
     <message>
         <location line="+49"/>
-        <source>Modify configuration options for Vertcoin</source>
-        <translation>Uprav nastavení Vertcoinu</translation>
+        <source>Modify configuration options for EyeGlass</source>
+        <translation>Uprav nastavení EyeGlassu</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -455,8 +455,8 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     <message>
         <location line="-165"/>
         <location line="+530"/>
-        <source>Vertcoin</source>
-        <translation>Vertcoin</translation>
+        <source>EyeGlass</source>
+        <translation>EyeGlass</translation>
     </message>
     <message>
         <location line="-530"/>
@@ -480,8 +480,8 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     </message>
     <message>
         <location line="+22"/>
-        <source>&amp;About Vertcoin</source>
-        <translation>O &amp;Vertcoinu</translation>
+        <source>&amp;About EyeGlass</source>
+        <translation>O &amp;EyeGlassu</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -500,13 +500,13 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     </message>
     <message>
         <location line="+7"/>
-        <source>Sign messages with your Vertcoin addresses to prove you own them</source>
-        <translation>Podepiš zprávy svými Vertcoinovými adresami, čímž prokážeš, že jsi jejich vlastníkem</translation>
+        <source>Sign messages with your EyeGlass addresses to prove you own them</source>
+        <translation>Podepiš zprávy svými EyeGlassovými adresami, čímž prokážeš, že jsi jejich vlastníkem</translation>
     </message>
     <message>
         <location line="+2"/>
-        <source>Verify messages to ensure they were signed with specified Vertcoin addresses</source>
-        <translation>Ověř zprávy, aby ses ujistil, že byly podepsány danými Vertcoinovými adresami</translation>
+        <source>Verify messages to ensure they were signed with specified EyeGlass addresses</source>
+        <translation>Ověř zprávy, aby ses ujistil, že byly podepsány danými EyeGlassovými adresami</translation>
     </message>
     <message>
         <location line="+28"/>
@@ -536,13 +536,13 @@ Tento produkt zahrnuje programy vyvinuté OpenSSL Projektem pro použití v Open
     </message>
     <message>
         <location line="+47"/>
-        <source>Vertcoin client</source>
-        <translation>Vertcoin klient</translation>
+        <source>EyeGlass client</source>
+        <translation>EyeGlass klient</translation>
     </message>
     <message numerus="yes">
         <location line="+141"/>
-        <source>%n active connection(s) to Vertcoin network</source>
-        <translation><numerusform>%n aktivní spojení do Vertcoinové sítě</numerusform><numerusform>%n aktivní spojení do Vertcoinové sítě</numerusform><numerusform>%n aktivních spojení do Vertcoinové sítě</numerusform></translation>
+        <source>%n active connection(s) to EyeGlass network</source>
+        <translation><numerusform>%n aktivní spojení do EyeGlassové sítě</numerusform><numerusform>%n aktivní spojení do EyeGlassové sítě</numerusform><numerusform>%n aktivních spojení do EyeGlassové sítě</numerusform></translation>
     </message>
     <message>
         <location line="+22"/>
@@ -656,8 +656,8 @@ Adresa: %4
     <message>
         <location line="-23"/>
         <location line="+23"/>
-        <source>URI can not be parsed! This can be caused by an invalid Vertcoin address or malformed URI parameters.</source>
-        <translation>Nepodařilo se analyzovat URI! Důvodem může být neplatná Vertcoinová adresa nebo poškozené parametry URI.</translation>
+        <source>URI can not be parsed! This can be caused by an invalid EyeGlass address or malformed URI parameters.</source>
+        <translation>Nepodařilo se analyzovat URI! Důvodem může být neplatná EyeGlassová adresa nebo poškozené parametry URI.</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -671,8 +671,8 @@ Adresa: %4
     </message>
     <message>
         <location filename="../bitcoin.cpp" line="+111"/>
-        <source>A fatal error occurred. Vertcoin can no longer continue safely and will quit.</source>
-        <translation>Stala se fatální chyba. Vertcoin nemůže bezpečně pokračovat v činnosti, a proto skončí.</translation>
+        <source>A fatal error occurred. EyeGlass can no longer continue safely and will quit.</source>
+        <translation>Stala se fatální chyba. EyeGlass nemůže bezpečně pokračovat v činnosti, a proto skončí.</translation>
     </message>
 </context>
 <context>
@@ -737,8 +737,8 @@ Adresa: %4
     </message>
     <message>
         <location line="-5"/>
-        <source>The entered address &quot;%1&quot; is not a valid Vertcoin address.</source>
-        <translation>Zadaná adresa &quot;%1&quot; není platná Vertcoinová adresa.</translation>
+        <source>The entered address &quot;%1&quot; is not a valid EyeGlass address.</source>
+        <translation>Zadaná adresa &quot;%1&quot; není platná EyeGlassová adresa.</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -756,8 +756,8 @@ Adresa: %4
     <message>
         <location filename="../guiutil.cpp" line="+424"/>
         <location line="+12"/>
-        <source>Vertcoin-Qt</source>
-        <translation>Vertcoin-Qt</translation>
+        <source>EyeGlass-Qt</source>
+        <translation>EyeGlass-Qt</translation>
     </message>
     <message>
         <location line="-12"/>
@@ -819,13 +819,13 @@ Adresa: %4
     </message>
     <message>
         <location line="+31"/>
-        <source>Automatically start Vertcoin after logging in to the system.</source>
-        <translation>Automaticky spustí Vertcoin po přihlášení do systému.</translation>
+        <source>Automatically start EyeGlass after logging in to the system.</source>
+        <translation>Automaticky spustí EyeGlass po přihlášení do systému.</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>&amp;Start Vertcoin on system login</source>
-        <translation>S&amp;pustit Vertcoin po přihlášení do systému</translation>
+        <source>&amp;Start EyeGlass on system login</source>
+        <translation>S&amp;pustit EyeGlass po přihlášení do systému</translation>
     </message>
     <message>
         <location line="+35"/>
@@ -844,7 +844,7 @@ Adresa: %4
     </message>
     <message>
         <location line="+6"/>
-        <source>Automatically open the Vertcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <source>Automatically open the EyeGlass client port on the router. This only works when your router supports UPnP and it is enabled.</source>
         <translation>Automaticky otevře potřebný port na routeru. Tohle funguje jen za předpokladu, že tvůj router podporuje UPnP a že je UPnP povolené.</translation>
     </message>
     <message>
@@ -854,8 +854,8 @@ Adresa: %4
     </message>
     <message>
         <location line="+7"/>
-        <source>Connect to the Vertcoin network through a SOCKS proxy (e.g. when connecting through Tor).</source>
-        <translation>Připojí se do Vertcoinové sítě přes SOCKS proxy (např. když se připojuje přes Tor).</translation>
+        <source>Connect to the EyeGlass network through a SOCKS proxy (e.g. when connecting through Tor).</source>
+        <translation>Připojí se do EyeGlassové sítě přes SOCKS proxy (např. když se připojuje přes Tor).</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -929,8 +929,8 @@ Adresa: %4
     </message>
     <message>
         <location line="+13"/>
-        <source>The user interface language can be set here. This setting will take effect after restarting Vertcoin.</source>
-        <translation>Tady lze nastavit jazyk uživatelského rozhraní. Nastavení se projeví až po restartování Vertcoinu.</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting EyeGlass.</source>
+        <translation>Tady lze nastavit jazyk uživatelského rozhraní. Nastavení se projeví až po restartování EyeGlassu.</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -944,8 +944,8 @@ Adresa: %4
     </message>
     <message>
         <location line="+9"/>
-        <source>Whether to show Vertcoin addresses in the transaction list or not.</source>
-        <translation>Zda ukazovat vertcoinové adresy ve výpisu transakcí nebo ne.</translation>
+        <source>Whether to show EyeGlass addresses in the transaction list or not.</source>
+        <translation>Zda ukazovat eyeglassové adresy ve výpisu transakcí nebo ne.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -996,8 +996,8 @@ Adresa: %4
     <message>
         <location line="-9"/>
         <location line="+9"/>
-        <source>This setting will take effect after restarting Vertcoin.</source>
-        <translation>Nastavení se projeví až po restartování Vertcoinu.</translation>
+        <source>This setting will take effect after restarting EyeGlass.</source>
+        <translation>Nastavení se projeví až po restartování EyeGlassu.</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -1015,8 +1015,8 @@ Adresa: %4
     <message>
         <location line="+50"/>
         <location line="+166"/>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Vertcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>Zobrazené informace nemusí být aktuální. Tvá peněženka se automaticky sesynchronizuje s Vertcoinovou sítí, jakmile se s ní spojí. Zatím ale ještě není synchronizace dokončena.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the EyeGlass network after a connection is established, but this process has not completed yet.</source>
+        <translation>Zobrazené informace nemusí být aktuální. Tvá peněženka se automaticky sesynchronizuje s EyeGlassovou sítí, jakmile se s ní spojí. Zatím ale ještě není synchronizace dokončena.</translation>
     </message>
     <message>
         <location line="-124"/>
@@ -1069,8 +1069,8 @@ Adresa: %4
     <name>PaymentServer</name>
     <message>
         <location filename="../paymentserver.cpp" line="+107"/>
-        <source>Cannot start vertcoin: click-to-pay handler</source>
-        <translation>Nemůžu spustit vertcoin: obsluha click-to-pay</translation>
+        <source>Cannot start eyeglass: click-to-pay handler</source>
+        <translation>Nemůžu spustit eyeglass: obsluha click-to-pay</translation>
     </message>
 </context>
 <context>
@@ -1219,8 +1219,8 @@ Adresa: %4
     </message>
     <message>
         <location line="+7"/>
-        <source>Show the Vertcoin-Qt help message to get a list with possible Vertcoin command-line options.</source>
-        <translation>Seznam parametrů Vertcoinu pro příkazovou řádku získáš v nápovědě Vertcoinu Qt.</translation>
+        <source>Show the EyeGlass-Qt help message to get a list with possible EyeGlass command-line options.</source>
+        <translation>Seznam parametrů EyeGlassu pro příkazovou řádku získáš v nápovědě EyeGlassu Qt.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1239,13 +1239,13 @@ Adresa: %4
     </message>
     <message>
         <location line="-104"/>
-        <source>Vertcoin - Debug window</source>
-        <translation>Vertcoin - ladicí okno</translation>
+        <source>EyeGlass - Debug window</source>
+        <translation>EyeGlass - ladicí okno</translation>
     </message>
     <message>
         <location line="+25"/>
-        <source>Vertcoin Core</source>
-        <translation>Jádro Vertcoinu</translation>
+        <source>EyeGlass Core</source>
+        <translation>Jádro EyeGlassu</translation>
     </message>
     <message>
         <location line="+279"/>
@@ -1254,8 +1254,8 @@ Adresa: %4
     </message>
     <message>
         <location line="+7"/>
-        <source>Open the Vertcoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Otevři soubor s ladicími záznamy Vertcoinu z aktuálního datového adresáře. U velkých logů to může pár vteřin zabrat.</translation>
+        <source>Open the EyeGlass debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Otevři soubor s ladicími záznamy EyeGlassu z aktuálního datového adresáře. U velkých logů to může pár vteřin zabrat.</translation>
     </message>
     <message>
         <location line="+102"/>
@@ -1264,8 +1264,8 @@ Adresa: %4
     </message>
     <message>
         <location filename="../rpcconsole.cpp" line="-30"/>
-        <source>Welcome to the Vertcoin RPC console.</source>
-        <translation>Vítej v Vertcoinové RPC konzoli.</translation>
+        <source>Welcome to the EyeGlass RPC console.</source>
+        <translation>Vítej v EyeGlassové RPC konzoli.</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1448,8 +1448,8 @@ Adresa: %4
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="+1"/>
-        <source>Enter a Vertcoin address (e.g. Vg6KN8SSPGuwxy3gwDodxghD3YHqqTpzDs)</source>
-        <translation>Zadej Vertcoinovou adresu (např. Vg6KN8SSPGuwxy3gwDodxghD3YHqqTpzDs)</translation>
+        <source>Enter a EyeGlass address (e.g. Vg6KN8SSPGuwxy3gwDodxghD3YHqqTpzDs)</source>
+        <translation>Zadej EyeGlassovou adresu (např. Vg6KN8SSPGuwxy3gwDodxghD3YHqqTpzDs)</translation>
     </message>
 </context>
 <context>
@@ -1513,8 +1513,8 @@ Adresa: %4
     </message>
     <message>
         <location line="+21"/>
-        <source>Sign the message to prove you own this Vertcoin address</source>
-        <translation>Podepiš zprávu, čímž prokážeš, že jsi vlastníkem této Vertcoinové adresy</translation>
+        <source>Sign the message to prove you own this EyeGlass address</source>
+        <translation>Podepiš zprávu, čímž prokážeš, že jsi vlastníkem této EyeGlassové adresy</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1549,8 +1549,8 @@ Adresa: %4
     </message>
     <message>
         <location line="+40"/>
-        <source>Verify the message to ensure it was signed with the specified Vertcoin address</source>
-        <translation>Ověř zprávu, aby ses ujistil, že byla podepsána danou Vertcoinovou adresou</translation>
+        <source>Verify the message to ensure it was signed with the specified EyeGlass address</source>
+        <translation>Ověř zprávu, aby ses ujistil, že byla podepsána danou EyeGlassovou adresou</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1565,8 +1565,8 @@ Adresa: %4
     <message>
         <location filename="../signverifymessagedialog.cpp" line="+27"/>
         <location line="+3"/>
-        <source>Enter a Vertcoin address (e.g. Vg6KN8SSPGuwxy3gwDodxghD3YHqqTpzDs)</source>
-        <translation>Zadej Vertcoinovou adresu (např. Vg6KN8SSPGuwxy3gwDodxghD3YHqqTpzDs)</translation>
+        <source>Enter a EyeGlass address (e.g. Vg6KN8SSPGuwxy3gwDodxghD3YHqqTpzDs)</source>
+        <translation>Zadej EyeGlassovou adresu (např. Vg6KN8SSPGuwxy3gwDodxghD3YHqqTpzDs)</translation>
     </message>
     <message>
         <location line="-2"/>
@@ -1575,8 +1575,8 @@ Adresa: %4
     </message>
     <message>
         <location line="+3"/>
-        <source>Enter Vertcoin signature</source>
-        <translation>Vlož Vertcoinový podpis</translation>
+        <source>Enter EyeGlass signature</source>
+        <translation>Vlož EyeGlassový podpis</translation>
     </message>
     <message>
         <location line="+82"/>
@@ -1649,8 +1649,8 @@ Adresa: %4
     <name>SplashScreen</name>
     <message>
         <location filename="../splashscreen.cpp" line="+22"/>
-        <source>The Vertcoin developers</source>
-        <translation>Vývojáři Vertcoinu</translation>
+        <source>The EyeGlass developers</source>
+        <translation>Vývojáři EyeGlassu</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2187,8 +2187,8 @@ Adresa: %4
     <name>bitcoin-core</name>
     <message>
         <location filename="../bitcoinstrings.cpp" line="+94"/>
-        <source>Vertcoin version</source>
-        <translation>Verze Vertcoinu</translation>
+        <source>EyeGlass version</source>
+        <translation>Verze EyeGlassu</translation>
     </message>
     <message>
         <location line="+102"/>
@@ -2197,8 +2197,8 @@ Adresa: %4
     </message>
     <message>
         <location line="-29"/>
-        <source>Send command to -server or vertcoind</source>
-        <translation>Poslat příkaz pro -server nebo vertcoind</translation>
+        <source>Send command to -server or eyeglassd</source>
+        <translation>Poslat příkaz pro -server nebo eyeglassd</translation>
     </message>
     <message>
         <location line="-23"/>
@@ -2217,13 +2217,13 @@ Adresa: %4
     </message>
     <message>
         <location line="+24"/>
-        <source>Specify configuration file (default: vertcoin.conf)</source>
-        <translation>Konfigurační soubor (výchozí: vertcoin.conf)</translation>
+        <source>Specify configuration file (default: eyeglass.conf)</source>
+        <translation>Konfigurační soubor (výchozí: eyeglass.conf)</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>Specify pid file (default: vertcoind.pid)</source>
-        <translation>PID soubor (výchozí: vertcoind.pid)</translation>
+        <source>Specify pid file (default: eyeglassd.pid)</source>
+        <translation>PID soubor (výchozí: eyeglassd.pid)</translation>
     </message>
     <message>
         <location line="-1"/>
@@ -2300,24 +2300,24 @@ Adresa: %4
         <source>%s, you must set a rpcpassword in the configuration file:
 %s
 It is recommended you use the following random password:
-rpcuser=vertcoinrpc
+rpcuser=eyeglassrpc
 rpcpassword=%s
 (you do not need to remember this password)
 The username and password MUST NOT be the same.
 If the file does not exist, create it with owner-readable-only file permissions.
 It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s &quot;Vertcoin Alert&quot; admin@foo.com
+for example: alertnotify=echo %%s | mail -s &quot;EyeGlass Alert&quot; admin@foo.com
 </source>
         <translation>%s, musíš nastavit rpcpassword v konfiguračním souboru:
 %s
 Je vhodné použít následující náhodné heslo:
-rpcuser=vertcoinrpc
+rpcuser=eyeglassrpc
 rpcpassword=%s
 (není potřeba si ho pamatovat)
 rpcuser a rpcpassword NESMÍ být stejné.
 Pokud konfigurační soubor ještě neexistuje, vytvoř ho tak, aby ho mohl číst pouze vlastník.
 Je také doporučeno si nastavit alertnotify, abys byl upozorněn na případné problémy;
-například: alertnotify=echo %%s | mail -s &quot;Vertcoin Alert&quot; admin@foo.com
+například: alertnotify=echo %%s | mail -s &quot;EyeGlass Alert&quot; admin@foo.com
 </translation>
     </message>
     <message>
@@ -2332,8 +2332,8 @@ například: alertnotify=echo %%s | mail -s &quot;Vertcoin Alert&quot; admin@foo
     </message>
     <message>
         <location line="+3"/>
-        <source>Cannot obtain a lock on data directory %s. Vertcoin is probably already running.</source>
-        <translation>Nedaří se mi získat zámek na datový adresář %s. Vertcoin pravděpodobně už jednou běží.</translation>
+        <source>Cannot obtain a lock on data directory %s. EyeGlass is probably already running.</source>
+        <translation>Nedaří se mi získat zámek na datový adresář %s. EyeGlass pravděpodobně už jednou běží.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -2377,8 +2377,8 @@ například: alertnotify=echo %%s | mail -s &quot;Vertcoin Alert&quot; admin@foo
     </message>
     <message>
         <location line="+3"/>
-        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong Vertcoin will not work properly.</source>
-        <translation>Upozornění: Zkontroluj, že máš v počítači správně nastavený datum a čas! Pokud jsou nastaveny špatně, Vertcoin nebude fungovat správně.</translation>
+        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong EyeGlass will not work properly.</source>
+        <translation>Upozornění: Zkontroluj, že máš v počítači správně nastavený datum a čas! Pokud jsou nastaveny špatně, EyeGlass nebude fungovat správně.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -2627,8 +2627,8 @@ například: alertnotify=echo %%s | mail -s &quot;Vertcoin Alert&quot; admin@foo
     </message>
     <message>
         <location line="+5"/>
-        <source>SSL options: (see the Vertcoin Wiki for SSL setup instructions)</source>
-        <translation>Možnosti SSL: (viz instrukce nastavení SSL v Vertcoin Wiki)</translation>
+        <source>SSL options: (see the EyeGlass Wiki for SSL setup instructions)</source>
+        <translation>Možnosti SSL: (viz instrukce nastavení SSL v EyeGlass Wiki)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2817,13 +2817,13 @@ například: alertnotify=echo %%s | mail -s &quot;Vertcoin Alert&quot; admin@foo
     </message>
     <message>
         <location line="+1"/>
-        <source>Error loading wallet.dat: Wallet requires newer version of Vertcoin</source>
-        <translation>Chyba při načítání wallet.dat: peněženka vyžaduje novější verzi Vertcoinu</translation>
+        <source>Error loading wallet.dat: Wallet requires newer version of EyeGlass</source>
+        <translation>Chyba při načítání wallet.dat: peněženka vyžaduje novější verzi EyeGlassu</translation>
     </message>
     <message>
         <location line="+93"/>
-        <source>Wallet needed to be rewritten: restart Vertcoin to complete</source>
-        <translation>Soubor s peněženkou potřeboval přepsat: restartuj Vertcoin, aby se operace dokončila</translation>
+        <source>Wallet needed to be rewritten: restart EyeGlass to complete</source>
+        <translation>Soubor s peněženkou potřeboval přepsat: restartuj EyeGlass, aby se operace dokončila</translation>
     </message>
     <message>
         <location line="-95"/>
@@ -2882,8 +2882,8 @@ například: alertnotify=echo %%s | mail -s &quot;Vertcoin Alert&quot; admin@foo
     </message>
     <message>
         <location line="-25"/>
-        <source>Unable to bind to %s on this computer. Vertcoin is probably already running.</source>
-        <translation>Nedaří se mi připojit na %s na tomhle počítači. Vertcoin už pravděpodobně jednou běží.</translation>
+        <source>Unable to bind to %s on this computer. EyeGlass is probably already running.</source>
+        <translation>Nedaří se mi připojit na %s na tomhle počítači. EyeGlass už pravděpodobně jednou běží.</translation>
     </message>
     <message>
         <location line="+64"/>

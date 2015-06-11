@@ -130,10 +130,10 @@ OBJS_SSE2= obj/scrypt-sse2.o
 OBJS += $(OBJS_SSE2)
 endif
 
-all: vertcoind.exe
+all: eyeglassd.exe
 
-test check: test_vertcoin.exe FORCE
-	test_vertcoin.exe
+test check: test_eyeglass.exe FORCE
+	test_eyeglass.exe
 
 #
 # LevelDB support
@@ -153,7 +153,7 @@ obj/%.o: %.cpp $(HEADERS)
 Lyra2RE/%.o: Lyra2RE%.c $(HEADERS)
 	$(CC) -c $(CFLAGS) -o $@ $<
 	
-vertcoind.exe: $(OBJS:obj/%=obj/%)
+eyeglassd.exe: $(OBJS:obj/%=obj/%)
 	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $(LIBPATHS) $^ $(LIBS)
 
 TESTOBJS := $(patsubst test/%.cpp,obj-test/%.o,$(wildcard test/*.cpp))
@@ -161,11 +161,11 @@ TESTOBJS := $(patsubst test/%.cpp,obj-test/%.o,$(wildcard test/*.cpp))
 obj-test/%.o: test/%.cpp $(HEADERS)
 	$(CXX) -c $(TESTDEFS) $(CFLAGS) -o $@ $<
 
-test_vertcoin.exe: $(TESTOBJS) $(filter-out obj/init.o,$(OBJS:obj/%=obj/%))
+test_eyeglass.exe: $(TESTOBJS) $(filter-out obj/init.o,$(OBJS:obj/%=obj/%))
 	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $(LIBPATHS) $^ -lboost_unit_test_framework$(BOOST_SUFFIX) $(LIBS)
     
 clean:
-	rm -f vertcoind.exe test_vertcoin.exe
+	rm -f eyeglassd.exe test_eyeglass.exe
 	rm -f obj/*
 	rm -f Lyra2RE/*.o
 	rm -f obj-test/*

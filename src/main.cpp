@@ -9,6 +9,7 @@
 #include "txdb.h"
 #include "net.h"
 #include "init.h"
+#include "auxpow.h"
 #include "ui_interface.h"
 #include "checkqueue.h"
 #include <boost/algorithm/string/replace.hpp>
@@ -33,8 +34,8 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("0x4d96a915f49d40b1e5c2844d1ee2dccb90013a990ccea12c492d22110489f0c4");
-static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Vertcoin: starting difficulty is 1 / 2^12
+uint256 hashGenesisBlock("0x05e4e5239dcef8b4f380fd319b2767e9a6ea25e9da1c49da4193167324ffed6b");
+static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // EyeGlass: starting difficulty is 1 / 2^12
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
 uint256 nBestChainWork = 0;
@@ -68,7 +69,7 @@ map<uint256, set<uint256> > mapOrphanTransactionsByPrev;
 // Constant stuff for coinbase transactions we create:
 CScript COINBASE_FLAGS;
 
-const string strMessageMagic = "Vertcoin Signed Message:\n";
+const string strMessageMagic = "EyeGlass Signed Message:\n";
 
 double dHashesPerSec = 0.0;
 int64 nHPSTimerStart = 0;
@@ -359,7 +360,7 @@ unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans)
 
 bool CTxOut::IsDust() const
 {
-    // Vertcoin: IsDust() detection disabled, allows any valid dust to be relayed.
+    // EyeGlass: IsDust() detection disabled, allows any valid dust to be relayed.
     // The fees imposed on each dust txo is considered sufficient spam deterrant.
     return false;
 }
@@ -632,7 +633,7 @@ int64 CTransaction::GetMinFee(unsigned int nBlockSize, bool fAllowFree,
             nMinFee = 0;
     }
 
-    // Vertcoin
+    // EyeGlass
     // To limit dust spam, add nBaseFee for each output less than DUST_SOFT_LIMIT
     BOOST_FOREACH(const CTxOut& txout, vout)
         if (txout.nValue < DUST_SOFT_LIMIT)
@@ -1087,6 +1088,15 @@ bool CBlock::ReadFromDisk(const CBlockIndex* pindex)
     return true;
 }
 
+void CBlockHeader::SetAuxPow(CAuxPow* pow)
+{
+    if (pow != NULL)
+        nVersion |= BLOCK_VERSION_AUXPOW;
+    else
+        nVersion &= ~BLOCK_VERSION_AUXPOW;
+    auxpow.reset(pow);
+}
+
 uint256 static GetOrphanRoot(const CBlockHeader* pblock)
 {
     // Work back to the first block in the orphan chain
@@ -1129,18 +1139,25 @@ unsigned char GetNfactor(int64 nTimestamp) {
 
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
-    int64 nSubsidy = 50 * COIN;
+    int64 nSubsidy = 64 * COIN;
 
-    // Subsidy is cut in half every 840000 blocks, which will occur approximately every 4 years
-    nSubsidy >>= (nHeight / 840000); // Vertcoin: 840k blocks in ~4 years
-
+    // Subsidy is cut in half every 30000 blocks, which will occur approximately every 4 years
+    nSubsidy >>= (nHeight / 30000); // EyeGlass: 30k blocks
+    
+    if (nHeight < 2000) {
+        nSubsidy = (1 * COIN) + (nFees*2);
+    }
+    
+    if (nSubsidy < 1) {
+        nSubsidy = nFees * 2;
+    }    
     return nSubsidy + nFees;
 }
 
 
 
-static const int64 nTargetTimespan = 3.5 * 24 * 60 * 60; // Vertcoin: 3.5 days
-static const int64 nTargetSpacing = 2.5 * 60; // Vertcoin: 2.5 minutes
+static const int64 nTargetTimespan = 3.5 * 24 * 60 * 60; // EyeGlass: 3.5 days
+static const int64 nTargetSpacing = 2.5 * 60; // EyeGlass: 2.5 minutes
 static const int64 nInterval = nTargetTimespan / nTargetSpacing;
 static const int nKGWInterval = 12; // Timewarp fix - retargets every 12 blocks
 
@@ -1203,7 +1220,7 @@ unsigned int static GetNextWorkRequired_V1(const CBlockIndex* pindexLast, const 
         return pindexLast->nBits;
     }
 
-    // Vertcoin: This fixes an issue where a 51% attack can change difficulty at will.
+    // EyeGlass: This fixes an issue where a 51% attack can change difficulty at will.
     // Go back the full period unless it's the first retarget after genesis. Code courtesy of Art Forz
     int blockstogoback = nInterval-1;
     if ((pindexLast->nHeight+1) != nInterval)
@@ -1334,30 +1351,13 @@ unsigned int static GetNextWorkRequired_V2(const CBlockIndex* pindexLast, const 
 	    }
         }
 
-        if(pindexLast->nHeight+1 == 208301)
-        {
-            return 0x1e0ffff0;
-        }
-        else
-        {
-            return KimotoGravityWell(pindexLast, pblock, BlocksTargetSpacing, PastBlocksMin, PastBlocksMax);
-        }
+        return KimotoGravityWell(pindexLast, pblock, BlocksTargetSpacing, PastBlocksMin, PastBlocksMax);
 }
 
 
 
 unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock)
 {
-        int DiffMode = 1; // legacy diff-mode
-        if (fTestNet) {
-                if (pindexLast->nHeight+1 >= 2116) { DiffMode = 2; } // vertcoin, 100 blocks after first legacy diff adjustment
-        }
-        else {
-        	if (pindexLast->nHeight+1 >= 26754) { DiffMode = 2; }  //vertcoin, 5 days after 27/01/2014 12:00 UTC
-        }
-
-        if                (DiffMode == 1) { return GetNextWorkRequired_V1(pindexLast, pblock); } //legacy diff mode
-        else if        (DiffMode == 2) { return GetNextWorkRequired_V2(pindexLast, pblock); } // KGW
         return GetNextWorkRequired_V2(pindexLast, pblock); // KGW
 }
 
@@ -1419,7 +1419,8 @@ void static InvalidChainFound(CBlockIndex* pindexNew)
 
 void static InvalidBlockFound(CBlockIndex *pindex) {
     pindex->nStatus |= BLOCK_FAILED_VALID;
-    pblocktree->WriteBlockIndex(CDiskBlockIndex(pindex));
+//    pblocktree->WriteBlockIndex(CDiskBlockIndex(pindex));
+    pblocktree->WriteBlockIndex(*pindex);
     setBlockIndexValid.erase(pindex);
     InvalidChainFound(pindex);
     if (pindex->pnext) {
@@ -1452,7 +1453,8 @@ bool ConnectBestBlock(CValidationState &state) {
                 while (pindexTest != pindexFailed) {
                     pindexFailed->nStatus |= BLOCK_FAILED_CHILD;
                     setBlockIndexValid.erase(pindexFailed);
-                    pblocktree->WriteBlockIndex(CDiskBlockIndex(pindexFailed));
+                    // pblocktree->WriteBlockIndex(CDiskBlockIndex(pindexFailed));
+                    pblocktree->WriteBlockIndex(*pindexFailed);
                     pindexFailed = pindexFailed->pprev;
                 }
                 InvalidChainFound(pindexNewBest);
@@ -1791,7 +1793,7 @@ bool CBlock::ConnectBlock(CValidationState &state, CBlockIndex* pindex, CCoinsVi
 {
     LastHeight = pindex->nHeight;
     // Check it again in case a previous version let a bad block in
-    if (!CheckBlock(state, !fJustCheck, !fJustCheck))
+    if (!CheckBlock(state, pindex->nHeight, !fJustCheck, !fJustCheck))
         return false;
 
     // verify that the view's current state corresponds to the previous block
@@ -1919,8 +1921,7 @@ bool CBlock::ConnectBlock(CValidationState &state, CBlockIndex* pindex, CCoinsVi
 
         pindex->nStatus = (pindex->nStatus & ~BLOCK_VALID_MASK) | BLOCK_VALID_SCRIPTS;
 
-        CDiskBlockIndex blockindex(pindex);
-        if (!pblocktree->WriteBlockIndex(blockindex))
+        if (!pblocktree->WriteBlockIndex(*pindex))
             return state.Abort(_("Failed to write block index"));
     }
 
@@ -2145,7 +2146,9 @@ bool CBlock::AddToBlockIndex(CValidationState &state, const CDiskBlockPos &pos)
     pindexNew->nStatus = BLOCK_VALID_TRANSACTIONS | BLOCK_HAVE_DATA;
     setBlockIndexValid.insert(pindexNew);
 
-    if (!pblocktree->WriteBlockIndex(CDiskBlockIndex(pindexNew)))
+    /* write both the immutible data (CDiskBlockIndex) and the mutable data (BlockIndex) */
+    if (!pblocktree->WriteDiskBlockIndex(CDiskBlockIndex(pindexNew, this->auxpow)) || !pblocktree->WriteBlockIndex(*pindexNew))    
+//    if (!pblocktree->WriteBlockIndex(CDiskBlockIndex(pindexNew)))
         return state.Abort(_("Failed to write block index"));
 
     // New best?
@@ -2167,6 +2170,63 @@ bool CBlock::AddToBlockIndex(CValidationState &state, const CDiskBlockPos &pos)
     return true;
 }
 
+// to enable merged mining:
+// - set a block from which it will be enabled
+// - set a unique chain ID
+//   each merged minable scrypt_1024_1_1_256 coin should have a different one
+//   (if two have the same ID, they can't be merge mined together)
+int GetAuxPowStartBlock()
+{
+    if (fTestNet)
+        return 1;
+    else
+        return 1;
+}
+
+int GetOurChainID()
+{
+    return 0x0008;
+}
+
+bool CBlockHeader::CheckProofOfWork(int nHeight) const
+{
+    if (nHeight >= GetAuxPowStartBlock())
+    {
+        // Prevent same work from being submitted twice:
+        // - this block must have our chain ID
+        // - parent block must not have the same chain ID (see CAuxPow::Check)
+        // - index of this chain in chain merkle tree must be pre-determined (see CAuxPow::Check)
+        if (!fTestNet && nHeight != INT_MAX && GetChainID() != GetOurChainID())
+            return error("CheckProofOfWork() : block does not have our chain ID");
+
+        if (auxpow.get() != NULL)
+        {
+            if (!auxpow->Check(GetHash(), GetChainID()))
+                return error("CheckProofOfWork() : AUX POW is not valid");
+            // Check proof of work matches claimed amount
+            if (!::CheckProofOfWork(auxpow->GetParentBlockHash(), nBits))
+                return error("CheckProofOfWork() : AUX proof of work failed");
+        } 
+        else
+        {
+            // Check proof of work matches claimed amount
+            if (!::CheckProofOfWork(GetPoWHash(), nBits))
+                return error("CheckProofOfWork() : proof of work failed");
+        }
+    }
+    else
+    {
+        if (auxpow.get() != NULL)
+        {
+            return error("CheckProofOfWork() : AUX POW is not allowed at this block");
+        }
+
+        // Check if proof of work marches claimed amount
+        if (!::CheckProofOfWork(GetPoWHash(), nBits))
+            return error("CheckProofOfWork() : proof of work failed");
+    }
+    return true;
+}
 
 bool FindBlockPos(CValidationState &state, CDiskBlockPos &pos, unsigned int nAddSize, unsigned int nHeight, uint64 nTime, bool fKnown = false)
 {
@@ -2263,7 +2323,7 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 }
 
 
-bool CBlock::CheckBlock(CValidationState &state, bool fCheckPOW, bool fCheckMerkleRoot) const
+bool CBlock::CheckBlock(CValidationState &state, int nHeight, bool fCheckPOW, bool fCheckMerkleRoot) const
 {
     // These are checks that are independent of context
     // that can be verified before saving an orphan block.
@@ -2272,7 +2332,7 @@ bool CBlock::CheckBlock(CValidationState &state, bool fCheckPOW, bool fCheckMerk
     if (vtx.empty() || vtx.size() > MAX_BLOCK_SIZE || ::GetSerializeSize(*this, SER_NETWORK, PROTOCOL_VERSION) > MAX_BLOCK_SIZE)
         return state.DoS(100, error("CheckBlock() : size limits failed"));
 
-    // Vertcoin: Special short-term limits to avoid 10,000 BDB lock limit:
+    // EyeGlass: Special short-term limits to avoid 10,000 BDB lock limit:
     if (GetBlockTime() < 1376568000)  // stop enforcing 15 August 2013 00:00:00
     {
         // Rule is: #unique txids referenced <= 4,500
@@ -2291,7 +2351,7 @@ bool CBlock::CheckBlock(CValidationState &state, bool fCheckPOW, bool fCheckMerk
     }
 	
 	CBlockIndex* pindexPrev = NULL;
-    int nHeight = 0;
+    // int nHeight = 0;
     if (GetHash() != hashGenesisBlock)
     {
         map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(hashPrevBlock);
@@ -2302,7 +2362,7 @@ bool CBlock::CheckBlock(CValidationState &state, bool fCheckPOW, bool fCheckMerk
 			{
 				nHeight = pindexPrev->nHeight+1;
 				// Check proof of work matches claimed amount
-				if (fCheckPOW && !CheckProofOfWork(GetPoWHash(nHeight), nBits))
+				if (fCheckPOW && !CheckProofOfWork(nHeight))
 					return state.DoS(50, error("CheckBlock() : proof of work failed"));
 			}
 		}
@@ -2449,7 +2509,7 @@ bool CBlock::AcceptBlock(CValidationState &state, CDiskBlockPos *dbp)
 
 bool CBlockIndex::IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned int nRequired, unsigned int nToCheck)
 {
-    // Vertcoin: temporarily disable v2 block lockin until we are ready for v2 transition
+    // EyeGlass: temporarily disable v2 block lockin until we are ready for v2 transition
     return false;
     unsigned int nFound = 0;
     for (unsigned int i = 0; i < nToCheck && nFound < nRequired && pstart != NULL; i++)
@@ -2471,7 +2531,7 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
         return state.Invalid(error("ProcessBlock() : already have block (orphan) %s", hash.ToString().c_str()));
 
     // Preliminary checks
-    if (!pblock->CheckBlock(state))
+    if (!pblock->CheckBlock(state, INT_MAX))
         return error("ProcessBlock() : CheckBlock FAILED");
 
     CBlockIndex* pcheckpoint = Checkpoints::GetLastCheckpoint(mapBlockIndex);
@@ -2570,7 +2630,7 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
 					// extract ephem_pubkey
 					ephem_pubkey.insert(ephem_pubkey.end(), txOut.scriptPubKey.begin() + 2, txOut.scriptPubKey.begin() + 35);
 
-					// generate Vertcoin address from ephem_pubkey, scan_secret and spend_secret
+					// generate EyeGlass address from ephem_pubkey, scan_secret and spend_secret
 					BOOST_FOREACH(const CStealthAddressEntry& stealthAddress, listStealthAddress)
 					{
 						for(unsigned int i = 0; i < 32; i++)
@@ -2957,7 +3017,7 @@ bool VerifyDB(int nCheckLevel, int nCheckDepth)
         if (!block.ReadFromDisk(pindex))
             return error("VerifyDB() : *** block.ReadFromDisk failed at %d, hash=%s", pindex->nHeight, pindex->GetBlockHash().ToString().c_str());
         // check level 1: verify block validity
-        if (nCheckLevel >= 1 && !block.CheckBlock(state))
+        if (nCheckLevel >= 1 && !block.CheckBlock(state, pindex->nHeight))
             return error("VerifyDB() : *** found bad block at %d, hash=%s\n", pindex->nHeight, pindex->GetBlockHash().ToString().c_str());
         // check level 2: verify undo validity
         if (nCheckLevel >= 2 && pindex) {
@@ -3032,11 +3092,11 @@ bool LoadBlockIndex()
         pchMessageStart[1] = 0xc1;
         pchMessageStart[2] = 0xb7;
         pchMessageStart[3] = 0xdc;*/
-        pchMessageStart[0] = 'v';
-        pchMessageStart[1] = 'e';
-        pchMessageStart[2] = 'r';
-        pchMessageStart[3] = 't';
-        hashGenesisBlock = uint256("0xbd270cb82121e85f4eba6d0c2ffdc9eb74674eb9bafed9bbaa0fe8f47d971aae");
+        pchMessageStart[0] = 'e';
+        pchMessageStart[1] = 'y';
+        pchMessageStart[2] = 'e';
+        pchMessageStart[3] = 'g';
+        hashGenesisBlock = uint256("0x05e4e5239dcef8b4f380fd319b2767e9a6ea25e9da1c49da4193167324ffed6b");
         //hashGenesisBlock = uint256("0xf5ae71e26c74beacc88382716aced69cddf3dffff24f384e1808905e0188f68f");
     }
 
@@ -3064,7 +3124,7 @@ bool InitBlockIndex() {
     if (!fReindex) {
 
         // Genesis block
-        const char* pszTimestamp = "01/09/2014 Germany to Help in Disposal of Syrian Chemical Weapons";
+        const char* pszTimestamp = "8th June 2015 Alton Towers Victim has leg amputated";
         CTransaction txNew;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
@@ -3076,16 +3136,16 @@ bool InitBlockIndex() {
         block.vtx.push_back(txNew);
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
-        block.nVersion = 1;
+        block.nVersion = 3;
         block.nBits    = 0x1e0ffff0;
-        block.nNonce = 5749262;
-        block.nTime = 1389311371;
+        block.nNonce = 13003437;
+        block.nTime = 1433792257;
 
         if (fTestNet)
         {
 
-            block.nNonce = 11521194;
-            block.nTime = 1389306217;
+            block.nNonce = 13003437;
+            block.nTime = 1433792257;
         }
 
         //// debug print
@@ -3093,8 +3153,36 @@ bool InitBlockIndex() {
         printf("%s\n", hash.ToString().c_str());
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
-        assert(block.hashMerkleRoot == uint256("0x4af38ca0e323c0a5226208a73b7589a52c030f234810cf51e13e3249fc0123e7"));
+        assert(block.hashMerkleRoot == uint256("0x9de85fe5af74d2ede0483ea547249847888eb767288edf2e909099a5de02aa6a"));
 
+        if (true && block.GetHash() != hashGenesisBlock)
+        {
+            printf("Searching for genesis block...\n");
+            // This will figure out a valid hash and Nonce if you're
+            // creating a different genesis block:
+            uint256 hashTarget = CBigNum().SetCompact(block.nBits).getuint256();
+            uint256 thash;
+
+            loop
+            {
+                lyra2re_hash(BEGIN(block.nVersion), BEGIN(thash));
+                if (thash <= hashTarget)
+                    break;
+                if ((block.nNonce & 0xFFF) == 0)
+                {
+                    printf("nonce %08X: hash = %s (target = %s)\n", block.nNonce, thash.ToString().c_str(), hashTarget.ToString().c_str());
+                }
+                ++block.nNonce;
+                if (block.nNonce == 0)
+                {
+                    printf("NONCE WRAPPED, incrementing time\n");
+                    ++block.nTime;
+                }
+            }
+            printf("block.nTime = %u \n", block.nTime);
+            printf("block.nNonce = %u \n", block.nNonce);
+            printf("block.GetHash = %s\n", block.GetHash().ToString().c_str());
+        }
 
         block.print();
         assert(hash == hashGenesisBlock);
@@ -3368,7 +3456,7 @@ bool static AlreadyHave(const CInv& inv)
 // The message start string is designed to be unlikely to occur in normal data.
 // The characters are rarely used upper ASCII, not valid as UTF-8, and produce
 // a large 4-byte int at any alignment.
-unsigned char pchMessageStart[4] = { 0xfa, 0xbf, 0xb5, 0xda }; // Vertcoin: increase each by adding 1 to bitcoin's value.
+unsigned char pchMessageStart[4] = { 0xfa, 0xbf, 0xb5, 0xda }; // EyeGlass: increase each by adding 1 to bitcoin's value.
 
 
 void static ProcessGetData(CNode* pfrom)
@@ -4410,7 +4498,7 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// VertcoinMiner
+// EyeGlassMiner
 //
 
 int static FormatHashBlocks(void* pbuffer, unsigned int len)
@@ -4817,33 +4905,49 @@ void FormatHashBuffers(CBlock* pblock, char* pmidstate, char* pdata, char* phash
 
 bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
 {
-    CBlockIndex* pindexPrev = NULL;
-    int nHeight = 0;
     if (pblock->GetHash() != hashGenesisBlock)
     {
         map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(pblock->hashPrevBlock);
-        pindexPrev = (*mi).second;
-        nHeight = pindexPrev->nHeight+1;
     }
     
-	uint256 hash = pblock->GetPoWHash(nHeight);
+	uint256 hash = pblock->GetPoWHash();
     uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
     printf("Hash found: %s", hash.GetHex().c_str());
 
-    if (hash > hashTarget)
-        return false;
+    CAuxPow *auxpow = pblock->auxpow.get();
 
-    //// debug print
-    printf("VertcoinMiner:\n");
-    printf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex().c_str(), hashTarget.GetHex().c_str());
-    pblock->print();
-    printf("generated %s\n", FormatMoney(pblock->vtx[0].vout[0].nValue).c_str());
+    if (auxpow != NULL) {
+        if (!auxpow->Check(pblock->GetHash(), pblock->GetChainID()))
+            return error("AUX POW is not valid");
 
-    // Found a solution
+        if (auxpow->GetParentBlockHash() > hashTarget)
+            return error("AUX POW parent hash %s is not under target %s", auxpow->GetParentBlockHash().GetHex().c_str(), hashTarget.GetHex().c_str());
+ 
+
+        //// debug print
+        printf("EyeGlassMiner:\n");
+        printf("AUX proof-of-work found  \n  hash: %s  \n parent hash: %s    \ntarget: %s\n", hash.GetHex().c_str(), auxpow->GetParentBlockHash().GetHex().c_str(), hashTarget.GetHex().c_str());
+    } 
+    else // Found a solution
     {
+        if (hash > hashTarget)
+            return false;
+    
+        //// debug print
+        printf("EyeGlassMiner:\n");
+        printf("proof-of-work found  \n  hash: %s  \n target: %s\n", hash.GetHex().c_str(), hashTarget.GetHex().c_str());
+        
+    }
+
+        pblock->print();
+        printf("generated %s\n", FormatMoney(pblock->vtx[0].vout[0].nValue).c_str());
+
         LOCK(cs_main);
+        
+        printf("Wrong: %s\n",pblock->hashPrevBlock.GetHex().c_str());
+        
         if (pblock->hashPrevBlock != hashBestChain)
-            return error("VertcoinMiner : generated block is stale");
+            return error("EyeGlassMiner : generated block is stale");
 
         // Remove key from key pool
         reservekey.KeepKey();
@@ -4857,18 +4961,17 @@ bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
         // Process this block the same as if we had received it from another node
         CValidationState state;
         if (!ProcessBlock(state, NULL, pblock))
-            return error("VertcoinMiner : ProcessBlock, block not accepted");
-    }
+            return error("EyeGlassMiner : ProcessBlock, block not accepted");
 
     return true;
 }
 
-void static VertcoinMiner(CWallet *pwallet)
+void static EyeGlassMiner(CWallet *pwallet)
 {
-    printf("VertcoinMiner started\n");
+    printf("EyeGlassMiner started\n");
 
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
-    RenameThread("vertcoin-miner");
+    RenameThread("eyeglass-miner");
 
     // Each thread has its own key and counter
     CReserveKey reservekey(pwallet);
@@ -4890,7 +4993,7 @@ void static VertcoinMiner(CWallet *pwallet)
         CBlock *pblock = &pblocktemplate->block;
         IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
-        printf("Running VertcoinMiner with %" PRIszu" transactions in block (%u bytes)\n", pblock->vtx.size(),
+        printf("Running EyeGlassMiner with %" PRIszu" transactions in block (%u bytes)\n", pblock->vtx.size(),
                ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
         //
@@ -4994,7 +5097,7 @@ void static VertcoinMiner(CWallet *pwallet)
     } }
     catch (boost::thread_interrupted)
     {
-        printf("VertcoinMiner terminated\n");
+        printf("EyeGlassMiner terminated\n");
         throw;
     }
 }
@@ -5019,7 +5122,49 @@ void GenerateBitcoins(bool fGenerate, CWallet* pwallet)
 
     minerThreads = new boost::thread_group();
     for (int i = 0; i < nThreads; i++)
-        minerThreads->create_thread(boost::bind(&VertcoinMiner, pwallet));
+        minerThreads->create_thread(boost::bind(&EyeGlassMiner, pwallet));
+}
+
+std::string CBlockIndex::ToString() const
+{
+    return strprintf("CBlockIndex(pprev=%p, pnext=%p, nHeight=%d, merkle=%s, hashBlock=%s)",
+            pprev, pnext, nHeight,
+            hashMerkleRoot.ToString().substr(0,10).c_str(),
+            GetBlockHash().ToString().c_str());
+}
+
+std::string CDiskBlockIndex::ToString() const
+{
+    std::string str = "CDiskBlockIndex(";
+    str += CBlockIndex::ToString();
+    str += strprintf("\n                hashBlock=%s, hashPrev=%s, hashParentBlock=%s)",
+        GetBlockHash().ToString().c_str(),
+        hashPrev.ToString().c_str(),
+        (auxpow.get() != NULL) ? auxpow->GetParentBlockHash().ToString().substr(0,20).c_str() : "-");
+    return str;
+}
+
+CBlockHeader CBlockIndex::GetBlockHeader() const
+{
+    CBlockHeader block;
+
+    if (nVersion & BLOCK_VERSION_AUXPOW) {
+        CDiskBlockIndex diskblockindex;
+        // auxpow is not in memory, load CDiskBlockHeader
+        // from database to get it
+
+        pblocktree->ReadDiskBlockIndex(*phashBlock, diskblockindex);
+        block.auxpow = diskblockindex.auxpow;
+    }
+
+    block.nVersion       = nVersion;
+    if (pprev)
+        block.hashPrevBlock = pprev->GetBlockHash();
+    block.hashMerkleRoot = hashMerkleRoot;
+    block.nTime          = nTime;
+    block.nBits          = nBits;
+    block.nNonce         = nNonce;
+    return block;
 }
 
 // Amount compression:
