@@ -5,16 +5,22 @@ http://www.eyeglass.org
 
 Copyright (c) 2009-2013 Bitcoin Developers
 Copyright (c) 2011-2013 Litecoin Developers
-Copyright (c) 2014 EyeGlass Developers
+Copyright (c) 2014-2015 Vertcoin/Eyeglass Developers
 
 What is EyeGlass?
 ----------------
 
-EyeGlass is a lite version of Bitcoin using Lyra2RE as a proof-of-work algorithm.
+EyeGlass is a fully merge-mineable version of Vertcoin using Lyra2RE as a proof-of-work algorithm.
  - 2.5 minute block targets
- - subsidy halves in 840k blocks (~4 years)
- - ~84 million total coins
- - 50 coins per block
+ - Before block 2000 - 1 coin + the fees multiplied by 2
+   Block 2000 - 30000 - 64 coins
+   30000 to 60000 - 32 coins
+   60000 to 90000 - 16 coins
+   90000 to 120000 - 8 coins
+   120000 - 150000 - 4 coins
+   150000 - 180000 - 2 coins
+   180000 - 210000 - 1 coins
+   210000 - Fees multiplied by 2 
  - Every block to retarget difficulty with Kimotos Gravity Well algorithm
 
 For more information, as well as an immediately useable, binary version of
