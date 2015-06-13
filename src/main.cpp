@@ -1090,13 +1090,11 @@ bool CBlock::ReadFromDisk(const CBlockIndex* pindex)
 
 void CBlockHeader::SetAuxPow(CAuxPow* pow)
 {
-    printf("Version before: %i", nVersion);
     if (pow != NULL)
         nVersion |= BLOCK_VERSION_AUXPOW;
     else
         nVersion &= ~BLOCK_VERSION_AUXPOW;
     auxpow.reset(pow);
-    printf("Version after: %i", nVersion);
 }
 
 uint256 static GetOrphanRoot(const CBlockHeader* pblock)
