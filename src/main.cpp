@@ -1090,11 +1090,13 @@ bool CBlock::ReadFromDisk(const CBlockIndex* pindex)
 
 void CBlockHeader::SetAuxPow(CAuxPow* pow)
 {
+    printf("Version before: %i", nVersion);
     if (pow != NULL)
         nVersion |= BLOCK_VERSION_AUXPOW;
     else
         nVersion &= ~BLOCK_VERSION_AUXPOW;
     auxpow.reset(pow);
+    printf("Version after: %i", nVersion);
 }
 
 uint256 static GetOrphanRoot(const CBlockHeader* pblock)
@@ -2096,7 +2098,7 @@ bool SetBestChain(CValidationState &state, CBlockIndex* pindexNew)
         const CBlockIndex* pindex = pindexBest;
         for (int i = 0; i < 100 && pindex != NULL; i++)
         {
-            if (pindex->nVersion > CBlock::CURRENT_VERSION)
+            if (pindex->nVersion & BLOCK_VERSION_AUXPOW)
                 ++nUpgraded;
             pindex = pindex->pprev;
         }
@@ -4021,7 +4023,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         vRecv >> block;
 
         printf("received block %s\n", block.GetHash().ToString().c_str());
-        // block.print();
+        block.print();
 
         CInv inv(MSG_BLOCK, block.GetHash());
         pfrom->AddInventoryKnown(inv);
