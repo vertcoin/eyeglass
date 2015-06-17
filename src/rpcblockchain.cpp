@@ -57,7 +57,7 @@ Object blockToJSON(const CBlock& block, const CBlockIndex* blockindex)
     result.push_back(Pair("confirmations", (int)txGen.GetDepthInMainChain()));
     result.push_back(Pair("size", (int)::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION)));
     result.push_back(Pair("height", blockindex->nHeight));
-    result.push_back(Pair("version", block.nVersion));
+    result.push_back(Pair("version", (block.nVersion & 0xff)));
     result.push_back(Pair("merkleroot", block.hashMerkleRoot.GetHex()));
     if (block.nVersion & BLOCK_VERSION_AUXPOW) {
         // this block includes auxpow
