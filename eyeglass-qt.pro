@@ -324,6 +324,7 @@ SOURCES += src/qt/bitcoin.cpp \
     src/txdb.cpp \
     src/qt/splashscreen.cpp \
     src/stealth.cpp \
+    src/auxpow.cpp \
     src/Lyra2RE/Lyra2.c \
     src/Lyra2RE/Lyra2RE.c \
     src/Lyra2RE/Sponge.c \
